@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #0B0B0A;
+  --color-surface: #141311;
+  --color-surface-raised: #1B1916;
+  --color-text-primary: #F2EFE9;
+  --color-text-secondary: #8C887E;
+  --color-text-tertiary: #5C594F;
+  --color-accent-brass: #B8834A;
+  --color-accent-brass-dim: #8A6438;
+  --color-accent-storm: #5C7A8A;
+  --color-accent-storm-dim: #455E6B;
+  --color-hairline: #262420;
+
+  --font-display: var(--font-fraunces), serif;
+  --font-sans: var(--font-instrument), sans-serif;
+  --font-mono: var(--font-plex-mono), monospace;
+
+  --spacing-18: 4.5rem;
+  --spacing-22: 5.5rem;
+  --spacing-30: 7.5rem;
+
+  --ease-instrument: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+}
+
+::selection {
+  background-color: #B8834A;
+  color: #0B0B0A;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0B0B0A;
+}
+::-webkit-scrollbar-thumb {
+  background: #262420;
+  border-radius: 3px;
+}
