@@ -1,11 +1,5 @@
-import Header from "./components/Header";
-import HeroPanel from "./components/HeroPanel";
+import GlassApp from "./components/GlassApp";
 
 export default function Home() {
-  return (
-    <main className="mx-auto max-w-5xl">
-      <Header />
-      <HeroPanel />
-    </main>
-  );
+  return <GlassApp />;
 }
