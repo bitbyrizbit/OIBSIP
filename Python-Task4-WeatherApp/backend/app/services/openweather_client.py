@@ -24,6 +24,14 @@ class OpenWeatherClient:
     async def get_current_weather_by_coords(self, lat: float, lon: float) -> dict:
         params = {"lat": lat, "lon": lon, "appid": self._api_key}
         return await self._get("/weather", params)
+    
+    async def get_forecast(self, city: str) -> dict:
+        params = {"q": city, "appid": self._api_key}
+        return await self._get("/forecast", params)
+
+    async def get_forecast_by_coords(self, lat: float, lon: float) -> dict:
+        params = {"lat": lat, "lon": lon, "appid": self._api_key}
+        return await self._get("/forecast", params)
 
     async def _get(self, path: str, params: dict) -> dict:
         url = f"{self._base_url}{path}"
