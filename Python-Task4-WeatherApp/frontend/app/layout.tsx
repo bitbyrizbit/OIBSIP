@@ -22,7 +22,7 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Atmos — a reading of the sky",
+  title: "Glass - a reading of the sky",
   description: "Live atmospheric conditions, read like an instrument.",
 };
 
