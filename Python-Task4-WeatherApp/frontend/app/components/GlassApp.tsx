@@ -4,14 +4,17 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Header from "./Header";
 import HeroPanel from "./HeroPanel";
+import HourlyStrip from "./HourlyStrip";
+import DailyOutlook from "./DailyOutlook";
 import SearchBar from "./SearchBar";
 import UnitToggle from "./UnitToggle";
 import AmbientField from "./AmbientField";
-import { getCurrentWeather, ApiError } from "../lib/api";
-import type { CurrentWeather, Unit } from "../lib/types";
+import { getCurrentWeather, getForecast, ApiError } from "../lib/api";
+import type { CurrentWeather, ForecastResponse, Unit } from "../lib/types";
 
 export default function GlassApp() {
   const [weather, setWeather] = useState<CurrentWeather | null>(null);
+  const [forecast, setForecast] = useState<ForecastResponse | null>(null);
   const [unit, setUnit] = useState<Unit>("celsius");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -20,8 +23,12 @@ export default function GlassApp() {
     setLoading(true);
     setError(null);
     try {
-      const result = await getCurrentWeather(city);
-      setWeather(result);
+      const [weatherResult, forecastResult] = await Promise.all([
+        getCurrentWeather(city),
+        getForecast(city),
+      ]);
+      setWeather(weatherResult);
+      setForecast(forecastResult);
     } catch (err) {
       if (err instanceof ApiError && err.status === 404) {
         setError(`no record found for "${city}". check the name and try again.`);
@@ -29,6 +36,7 @@ export default function GlassApp() {
         setError("the glass could not take a reading just now. try again shortly.");
       }
       setWeather(null);
+      setForecast(null);
     } finally {
       setLoading(false);
     }
@@ -38,7 +46,7 @@ export default function GlassApp() {
     <>
       <AmbientField condition={weather?.condition ?? null} />
 
-      <main className="relative z-10 mx-auto max-w-5xl">
+      <main className="relative z-10 mx-auto max-w-5xl pb-24">
         <Header />
 
         <div className="flex items-center justify-between px-8 md:px-16">
@@ -65,7 +73,13 @@ export default function GlassApp() {
           <p className="px-8 py-12 font-sans text-lg text-text-secondary md:px-16">{error}</p>
         )}
 
-        {weather && !loading && !error && <HeroPanel weather={weather} unit={unit} />}
+        {weather && forecast && !loading && !error && (
+          <>
+            <HeroPanel weather={weather} unit={unit} />
+            <HourlyStrip hours={forecast.hourly} unit={unit} />
+            <DailyOutlook days={forecast.daily} unit={unit} />
+          </>
+        )}
 
         {!weather && !loading && !error && (
           <p className="px-8 py-12 font-sans text-lg text-text-secondary md:px-16">
