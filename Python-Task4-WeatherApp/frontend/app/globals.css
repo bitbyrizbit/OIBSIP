@@ -5,17 +5,17 @@
   --color-surface: #141311;
   --color-surface-raised: #1B1916;
   --color-text-primary: #F2EFE9;
-  --color-text-secondary: #8C887E;
-  --color-text-tertiary: #5C594F;
-  --color-accent-brass: #B8834A;
-  --color-accent-brass-dim: #8A6438;
-  --color-accent-storm: #5C7A8A;
-  --color-accent-storm-dim: #455E6B;
-  --color-hairline: #262420;
+  --color-text-secondary: #E3DED5;
+  --color-text-tertiary: #A6A095;
+  --color-accent-brass: #D4A373;
+  --color-accent-brass-dim: #A67D55;
+  --color-accent-storm: #8CB1C7;
+  --color-accent-storm-dim: #6B8B9E;
+  --color-hairline: #3D3932;
 
   --font-display: var(--font-fraunces), serif;
   --font-sans: var(--font-instrument), sans-serif;
-  --font-mono: var(--font-plex-mono), monospace;
+  --font-mono: var(--font-space-grotesk), monospace;
 
   --spacing-18: 4.5rem;
   --spacing-22: 5.5rem;
@@ -34,6 +34,19 @@ html {
 
 body {
   min-height: 100vh;
+  position: relative;
+  background-color: var(--color-background);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+  opacity: 0.8;
+  mix-blend-mode: overlay;
 }
 
 ::selection {

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Instrument_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Fraunces, Instrument_Sans, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -15,10 +15,10 @@ const instrument = Instrument_Sans({
   variable: "--font-instrument",
 });
 
-const plexMono = IBM_Plex_Mono({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-plex-mono",
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-space-grotesk",
 });
 
 export const metadata: Metadata = {
@@ -32,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${instrument.variable} ${plexMono.variable}`}>
+    <html lang="en" className={`${fraunces.variable} ${instrument.variable} ${spaceGrotesk.variable}`}>
       <body className="bg-background text-text-primary font-sans antialiased">
         {children}
       </body>
