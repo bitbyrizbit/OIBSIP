@@ -29,6 +29,7 @@ export default function SearchBar({ onSearch, disabled }: SearchBarProps) {
         onChange={(e) => setValue(e.target.value)}
         placeholder="a city, anywhere"
         disabled={disabled}
+        suppressHydrationWarning
         className="flex-1 bg-transparent font-sans text-lg text-text-primary placeholder:text-text-tertiary focus:outline-none"
       />
       <button
