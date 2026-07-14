@@ -1,5 +1,7 @@
+"use client";
+
+import { motion } from "framer-motion";
 import type { DailyForecastEntry, Unit } from "../lib/types";
-import { isStormCondition } from "../lib/copy";
 import Reveal from "./Reveal";
 
 interface DailyOutlookProps {
@@ -17,44 +19,51 @@ export default function DailyOutlook({ days, unit }: DailyOutlookProps) {
   const range = weekMax - weekMin || 1;
 
   return (
-    <section className="px-8 py-12 md:px-16 md:py-16">
+    <section className="px-8 py-8 md:px-16 md:py-12 border-t border-hairline">
       <Reveal>
-        <p className="font-mono text-xs uppercase tracking-widest text-text-tertiary">
-          the week ahead
-        </p>
+        <h2 className="font-display italic text-2xl font-light text-accent-brass tracking-tight">
+          Extended Outlook
+        </h2>
       </Reveal>
 
-      <div className="mt-8 flex flex-col">
+      <div className="mt-10 flex flex-col max-w-4xl">
         {days.map((day, i) => {
           const min = unit === "celsius" ? day.temp_min_celsius : day.temp_min_fahrenheit;
           const max = unit === "celsius" ? day.temp_max_celsius : day.temp_max_fahrenheit;
           const leftPct = ((min - weekMin) / range) * 100;
           const widthPct = ((max - min) / range) * 100;
-          const accentClass = isStormCondition(day.condition) ? "bg-accent-storm" : "bg-accent-brass";
 
           return (
-            <Reveal key={day.date} delay={0.08 * i}>
-              <div className="grid grid-cols-[6rem_1fr_7rem] items-center gap-4 border-t border-hairline py-4 last:border-b md:grid-cols-[8rem_1fr_9rem]">
+            <Reveal key={day.date} delay={0.06 * i}>
+              <motion.div
+                className="grid grid-cols-[6rem_1fr_5rem] md:grid-cols-[9rem_1fr_7rem] items-center gap-8 py-4 border-b border-hairline last:border-b-0"
+                whileHover={{ x: 4 }}
+                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {/* Day + condition */}
                 <div>
-                  <p className="font-sans text-sm text-text-primary">{day.day_label}</p>
-                  <p className="font-mono text-xs uppercase tracking-widest text-text-tertiary">
+                  <p className="font-display italic text-xl font-light text-text-primary leading-tight">{day.day_label}</p>
+                  <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-accent-brass">
                     {day.condition}
                   </p>
                 </div>
 
-                <div className="relative h-1 rounded-full bg-hairline">
-                  <div
-                    className={`absolute h-1 rounded-full ${accentClass}`}
-                    style={{ left: `${leftPct}%`, width: `${Math.max(widthPct, 4)}%` }}
+                {/* Range bar */}
+                <div className="relative h-[2px] w-full bg-white/8 rounded-full overflow-hidden">
+                  <motion.div
+                    className="absolute top-0 h-full rounded-full bg-accent-brass"
+                    initial={{ width: "0%", left: `${leftPct}%` }}
+                    animate={{ width: `${Math.max(widthPct, 5)}%`, left: `${leftPct}%` }}
+                    transition={{ duration: 1.2, delay: 0.1 + 0.06 * i, ease: [0.16, 1, 0.3, 1] }}
                   />
                 </div>
 
-                <div className="flex items-baseline justify-end gap-2 font-mono text-sm">
-                  <span className="text-text-secondary">{min.toFixed(0)}</span>
-                  <span className="text-text-tertiary">-</span>
-                  <span className="text-text-primary">{max.toFixed(0)}</span>
+                {/* Temps */}
+                <div className="flex flex-col items-end">
+                  <span className="font-display italic text-xl font-light text-text-primary">{max.toFixed(0)}°</span>
+                  <span className="font-mono text-[10px] text-accent-brass opacity-50">{min.toFixed(0)}°</span>
                 </div>
-              </div>
+              </motion.div>
             </Reveal>
           );
         })}
