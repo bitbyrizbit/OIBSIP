@@ -7,6 +7,7 @@ import SearchBar from "./SearchBar";
 import UnitToggle from "./UnitToggle";
 import { getCurrentWeather, ApiError } from "../lib/api";
 import type { CurrentWeather, Unit } from "../lib/types";
+import { motion } from "framer-motion";
 
 export default function GlassApp() {
   const [weather, setWeather] = useState<CurrentWeather | null>(null);
@@ -46,9 +47,14 @@ export default function GlassApp() {
       </div>
 
       {loading && (
-        <p className="px-8 py-12 font-mono text-sm text-text-tertiary md:px-16">
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0.4, 1, 0.4] }}
+          transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+          className="px-8 py-12 font-mono text-sm text-text-tertiary md:px-16"
+        >
           taking a reading...
-        </p>
+        </motion.p>
       )}
 
       {error && !loading && (
