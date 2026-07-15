@@ -13,6 +13,7 @@ setup instructions live inside each project's own README.
 **[Python-Task4-WeatherApp](./Python-Task4-WeatherApp)** — Glass, a reading
 of the sky. A full-stack weather application built as an instrument reading
 rather than a typical dashboard. FastAPI, Next.js, Framer Motion.
+[Live](https://oibsip-sand.vercel.app)
 
 ---
 
