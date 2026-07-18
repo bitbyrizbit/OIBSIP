@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from app.api import auth
 from app.database import Base, engine
 from app.models import message, room, user  # noqa: F401 - ensures models register before create_all
+from app.api import auth, chat
 
 Base.metadata.create_all(bind=engine)
 
@@ -13,6 +14,7 @@ app = FastAPI(
 )
 
 app.include_router(auth.router)
+app.include_router(chat.router)
 
 
 @app.get("/health")
