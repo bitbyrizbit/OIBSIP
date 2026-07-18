@@ -15,6 +15,11 @@ of the sky. A full-stack weather application built as an instrument reading
 rather than a typical dashboard. FastAPI, Next.js, Framer Motion.
 [Live](https://oibsip-sand.vercel.app)
 
+**[Python-Task5-ChatApp](./Python-Task5-ChatApp)** — Party Line, pick up,
+someone's on the line. A real-time chat application built around 1900s
+party-line telephone culture rather than a generic messaging clone.
+FastAPI, WebSockets, Next.js, Framer Motion.
+
 ---
 
 *More tasks in progress.*
