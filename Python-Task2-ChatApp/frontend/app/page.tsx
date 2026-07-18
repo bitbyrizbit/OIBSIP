@@ -31,7 +31,7 @@ function ChatApp() {
     getRoomMessages(activeRoomId, token).then(setInitialMessages).catch(() => {});
   }, [activeRoomId, token]);
 
-  const { messages, activeUsers, connected, sendMessage } = useRoomSocket(activeRoomId, token, initialMessages);
+  const { messages, activeUsers, connected, typingUser, sendMessage, sendTyping } = useRoomSocket(activeRoomId, token, initialMessages);
 
   async function handleCreateRoom(name: string) {
     if (!token) return;
@@ -72,8 +72,8 @@ function ChatApp() {
         {activeRoom ? (
           <>
             <ConversationHeader roomName={activeRoom.name} activeUsers={activeUsers} connected={connected} />
-            <MessageThread messages={messages} currentUserId={user.id} />
-            <Composer onSend={sendMessage} disabled={!connected} />
+            <MessageThread messages={messages} currentUserId={user.id} typingUser={typingUser} />
+            <Composer onSend={sendMessage} onTyping={sendTyping} disabled={!connected} />
           </>
         ) : (
           <EmptyLine />

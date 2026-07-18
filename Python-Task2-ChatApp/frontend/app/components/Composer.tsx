@@ -1,14 +1,25 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, useRef, FormEvent, ChangeEvent } from "react";
 
 interface ComposerProps {
   onSend: (content: string) => void;
+  onTyping: () => void;
   disabled?: boolean;
 }
 
-export default function Composer({ onSend, disabled }: ComposerProps) {
+export default function Composer({ onSend, onTyping, disabled }: ComposerProps) {
   const [value, setValue] = useState("");
+  const lastTypingSentRef = useRef(0);
+
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    setValue(e.target.value);
+    const now = Date.now();
+    if (now - lastTypingSentRef.current > 1500) {
+      onTyping();
+      lastTypingSentRef.current = now;
+    }
+  }
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -24,7 +35,7 @@ export default function Composer({ onSend, disabled }: ComposerProps) {
       <input
         type="text"
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={handleChange}
         placeholder="say something down the line..."
         disabled={disabled}
         className="flex-1 rounded-md border border-hairline bg-surface px-4 py-2.5 font-sans text-sm text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-accent-gold"

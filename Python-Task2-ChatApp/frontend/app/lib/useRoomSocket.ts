@@ -6,7 +6,9 @@ export function useRoomSocket(roomId: number | null, token: string | null, initi
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [activeUsers, setActiveUsers] = useState<string[]>([]);
   const [connected, setConnected] = useState(false);
+  const [typingUser, setTypingUser] = useState<string | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setMessages(initialMessages);
@@ -22,14 +24,22 @@ export function useRoomSocket(roomId: number | null, token: string | null, initi
     ws.onclose = () => setConnected(false);
 
     ws.onmessage = (event) => {
-      const envelope: WSEnvelope = JSON.parse(event.data);
+      type RoomEnvelope = WSEnvelope | { type: "typing"; payload: { username: string } };
+      const envelope = JSON.parse(event.data) as RoomEnvelope;
 
       if (envelope.type === "message") {
         setMessages((prev) => [...prev, envelope.payload as Message]);
+        setTypingUser(null);
       }
 
       if (envelope.type === "presence") {
         setActiveUsers(envelope.payload.active_users as string[]);
+      }
+
+      if (envelope.type === "typing") {
+        setTypingUser(envelope.payload.username as string);
+        if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+        typingTimeoutRef.current = setTimeout(() => setTypingUser(null), 2500);
       }
     };
 
@@ -45,5 +55,11 @@ export function useRoomSocket(roomId: number | null, token: string | null, initi
     }
   }, []);
 
-  return { messages, activeUsers, connected, sendMessage };
+  const sendTyping = useCallback(() => {
+    if (socketRef.current?.readyState === WebSocket.OPEN) {
+      socketRef.current.send(JSON.stringify({ type: "typing", payload: {} }));
+    }
+  }, []);
+
+  return { messages, activeUsers, connected, typingUser, sendMessage, sendTyping };
 }
