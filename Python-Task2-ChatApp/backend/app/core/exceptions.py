@@ -16,3 +16,18 @@ class InvalidCredentialsError(AuthError):
 class InvalidTokenError(AuthError):
     def __init__(self):
         super().__init__("Could not validate credentials")
+        
+class RoomError(Exception):
+    """Base exception for room related failures."""
+
+
+class RoomNotFoundError(RoomError):
+    def __init__(self, identifier: str):
+        self.identifier = identifier
+        super().__init__(f"No room found matching '{identifier}'")
+
+
+class RoomAlreadyExistsError(RoomError):
+    def __init__(self, name: str):
+        self.name = name
+        super().__init__(f"A room named '{name}' already exists")
