@@ -28,8 +28,16 @@ export function useRoomSocket(roomId: number | null, token: string | null, initi
       const envelope = JSON.parse(event.data) as RoomEnvelope;
 
       if (envelope.type === "message") {
-        setMessages((prev) => [...prev, envelope.payload as Message]);
+        const incoming = envelope.payload as Message;
+        setMessages((prev) => [...prev, incoming]);
         setTypingUser(null);
+
+        if (document.hidden && Notification.permission === "granted") {
+          new Notification(`${incoming.sender_username} on the line`, {
+            body: incoming.content,
+            icon: "/favicon.ico",
+          });
+        }
       }
 
       if (envelope.type === "presence") {

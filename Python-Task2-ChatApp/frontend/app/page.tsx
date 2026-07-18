@@ -31,6 +31,12 @@ function ChatApp() {
     getRoomMessages(activeRoomId, token).then(setInitialMessages).catch(() => {});
   }, [activeRoomId, token]);
 
+  useEffect(() => {
+    if (user && "Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+  }, [user]);
+  
   const { messages, activeUsers, connected, typingUser, sendMessage, sendTyping } = useRoomSocket(activeRoomId, token, initialMessages);
 
   async function handleCreateRoom(name: string) {
