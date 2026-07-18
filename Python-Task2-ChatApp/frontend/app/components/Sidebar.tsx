@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import type { Room } from "../lib/types";
+import { motion } from "framer-motion";
 
 interface SidebarProps {
   rooms: Room[];
@@ -63,13 +64,22 @@ export default function Sidebar({ rooms, activeRoomId, onSelectRoom, onCreateRoo
           <button
             key={room.id}
             onClick={() => onSelectRoom(room.id)}
-            className={`w-full rounded-md px-3 py-2.5 text-left font-sans text-sm transition-colors duration-300 ${
-              activeRoomId === room.id
-                ? "bg-surface-raised text-ink"
-                : "text-ink-secondary hover:bg-surface-raised/60"
-            }`}
+            className="relative w-full rounded-md px-3 py-2.5 text-left font-sans text-sm"
           >
-            {room.name}
+            {activeRoomId === room.id && (
+              <motion.div
+                layoutId="active-room"
+                className="absolute inset-0 rounded-md bg-surface-raised"
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              />
+            )}
+            <span
+              className={`relative transition-colors duration-300 ${
+                activeRoomId === room.id ? "text-ink" : "text-ink-secondary hover:text-ink"
+              }`}
+            >
+              {room.name}
+            </span>
           </button>
         ))}
       </div>
