@@ -1,32 +1,92 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { AuthProvider, useAuth } from "./lib/AuthContext";
+import { getRooms, getRoomMessages, createRoom as apiCreateRoom } from "./lib/api";
+import { useRoomSocket } from "./lib/useRoomSocket";
+import type { Room, Message } from "./lib/types";
+import AuthScreen from "./components/AuthScreen";
 import Sidebar from "./components/Sidebar";
 import ConversationHeader from "./components/ConversationHeader";
+import MessageThread from "./components/MessageThread";
+import Composer from "./components/Composer";
 import EmptyLine from "./components/EmptyLine";
 
-const placeholderRooms = [
-  { id: 1, name: "general" },
-  { id: 2, name: "random" },
-];
-
-export default function Home() {
+function ChatApp() {
+  const { user, token, loading, logout } = useAuth();
+  const [rooms, setRooms] = useState<Room[]>([]);
   const [activeRoomId, setActiveRoomId] = useState<number | null>(null);
-  const activeRoom = placeholderRooms.find((r) => r.id === activeRoomId);
+  const [initialMessages, setInitialMessages] = useState<Message[]>([]);
+
+  useEffect(() => {
+    if (!token) return;
+    getRooms(token).then(setRooms).catch(() => {});
+  }, [token]);
+
+  useEffect(() => {
+    if (!token || activeRoomId === null) {
+      setInitialMessages([]);
+      return;
+    }
+    getRoomMessages(activeRoomId, token).then(setInitialMessages).catch(() => {});
+  }, [activeRoomId, token]);
+
+  const { messages, activeUsers, connected, sendMessage } = useRoomSocket(activeRoomId, token, initialMessages);
+
+  async function handleCreateRoom(name: string) {
+    if (!token) return;
+    try {
+      const room = await apiCreateRoom(name, token);
+      setRooms((prev) => [room, ...prev]);
+      setActiveRoomId(room.id);
+    } catch {
+      // room name likely taken, silently ignored for now, small polish item later
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <p className="font-mono text-sm text-ink-tertiary">picking up the line...</p>
+      </div>
+    );
+  }
+
+  if (!user || !token) {
+    return <AuthScreen />;
+  }
+
+  const activeRoom = rooms.find((r) => r.id === activeRoomId);
 
   return (
     <div className="flex h-screen bg-background">
-      <Sidebar rooms={placeholderRooms} activeRoomId={activeRoomId} onSelectRoom={setActiveRoomId} />
+      <Sidebar
+        rooms={rooms}
+        activeRoomId={activeRoomId}
+        onSelectRoom={setActiveRoomId}
+        onCreateRoom={handleCreateRoom}
+        username={user.username}
+        onLogout={logout}
+      />
       <div className="flex flex-1 flex-col">
         {activeRoom ? (
           <>
-            <ConversationHeader roomName={activeRoom.name} activeUsers={["priya"]} />
-            <div className="flex-1" />
+            <ConversationHeader roomName={activeRoom.name} activeUsers={activeUsers} connected={connected} />
+            <MessageThread messages={messages} currentUserId={user.id} />
+            <Composer onSend={sendMessage} disabled={!connected} />
           </>
         ) : (
           <EmptyLine />
         )}
       </div>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <AuthProvider>
+      <ChatApp />
+    </AuthProvider>
   );
 }
