@@ -1,3 +1,4 @@
+import { renderEmojiShortcodes } from "../lib/emoji";
 import { motion } from "framer-motion";
 import type { Message } from "../lib/types";
 
@@ -27,7 +28,7 @@ export default function MessageBubble({ message, isOwn }: MessageBubbleProps) {
           isOwn ? "bg-accent-red text-background" : "bg-surface text-ink"
         }`}
       >
-        {message.content}
+        {renderEmojiShortcodes(message.content)}
       </div>
       <p className="mt-1 px-1 font-mono text-xs text-ink-tertiary">{time}</p>
     </motion.div>
