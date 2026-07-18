@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import type { Message } from "../lib/types";
 
 interface MessageBubbleProps {
@@ -12,7 +13,12 @@ export default function MessageBubble({ message, isOwn }: MessageBubbleProps) {
   });
 
   return (
-    <div className={`flex flex-col ${isOwn ? "items-end" : "items-start"}`}>
+    <motion.div
+      initial={{ opacity: 0, y: 10, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      className={`flex flex-col ${isOwn ? "items-end" : "items-start"}`}
+    >
       {!isOwn && (
         <p className="mb-1 px-1 font-mono text-xs text-ink-tertiary">{message.sender_username}</p>
       )}
@@ -24,6 +30,6 @@ export default function MessageBubble({ message, isOwn }: MessageBubbleProps) {
         {message.content}
       </div>
       <p className="mt-1 px-1 font-mono text-xs text-ink-tertiary">{time}</p>
-    </div>
+    </motion.div>
   );
 }
