@@ -8,3 +8,4 @@ node_modules/
 scratch.py
 .env.local
 *.db
+ws_test.py
