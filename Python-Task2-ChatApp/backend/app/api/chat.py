@@ -38,7 +38,15 @@ async def room_websocket(
         while True:
             data = await websocket.receive_json()
 
-            if data.get("type") != "message":
+            if data.get("type") not in ("message", "typing"):
+                continue
+
+            if data.get("type") == "typing":
+                await manager.broadcast(
+                    room_id,
+                    {"type": "typing", "payload": {"username": current_user.username}},
+                    exclude=websocket,
+                )
                 continue
 
             content = data.get("payload", {}).get("content", "").strip()
