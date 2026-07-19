@@ -31,25 +31,22 @@ export default function Composer({ onSend, onTyping, disabled }: ComposerProps) 
   }
 
   return (
-    <div className="bg-surface p-6 shadow-[0_-4px_20px_rgba(0,0,0,0.5)] z-20 relative">
-      <form onSubmit={handleSubmit} className="flex items-center gap-6 bg-background rounded-sm shadow-inner hairline-t hairline-b hairline-l hairline-r border-hairline-dark px-8 py-5">
-        <div className="font-sans text-[10px] tracking-[0.2em] text-ink-tertiary uppercase">
-          Transmission
-        </div>
+    <div className="absolute bottom-0 left-[25%] right-0 z-50 bg-ink-alabaster border-t-8 border-accent-vermilion">
+      <form onSubmit={handleSubmit} className="flex items-stretch">
         <input
           type="text"
           value={value}
           onChange={handleChange}
-          placeholder="Enter message..."
+          placeholder="TYPE HERE..."
           disabled={disabled}
-          className="flex-1 bg-transparent font-display text-2xl italic text-ink placeholder:text-ink-tertiary/50 focus:outline-none focus:ring-0 disabled:opacity-50"
+          className="flex-1 bg-transparent px-12 py-8 font-sans text-5xl font-black uppercase tracking-tighter text-canvas-blue placeholder:text-canvas-blue/30 focus:outline-none focus:ring-0 disabled:opacity-50"
         />
         <button
           type="submit"
           disabled={disabled}
-          className="group relative px-6 py-2 bg-surface hairline-t hairline-b hairline-l hairline-r border-hairline-dark rounded-[1px] font-sans text-xs tracking-[0.2em] uppercase text-accent-copper transition-all hover:bg-surface-raised hover:text-ink hover:shadow-lg disabled:opacity-30 active:scale-95"
+          className="bg-canvas-blue px-16 flex items-center justify-center font-sans text-4xl font-black uppercase tracking-tighter text-ink-alabaster hover:bg-accent-vermilion transition-colors disabled:opacity-30"
         >
-          <span className="relative z-10 drop-shadow-sm">Send</span>
+          Execute
         </button>
       </form>
     </div>

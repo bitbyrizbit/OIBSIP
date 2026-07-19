@@ -1,26 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #0B0B0C;
-  --color-surface: #141415;
-  --color-surface-raised: #1C1C1E;
-  --color-ink: #E8E3D9;
-  --color-ink-secondary: #9A9386;
-  --color-ink-tertiary: #605B53;
-  --color-accent-copper: #B5734C;
-  --color-accent-copper-dim: #875132;
-  --color-hairline: #262628;
-  --color-hairline-dark: #3A3A3D;
+  --color-canvas-blue: #002FA7; /* Yves Klein Blue */
+  --color-ink-alabaster: #FDFBF7;
+  --color-accent-vermilion: #FF3B00;
+  --color-accent-absinthe: #C0FF00;
 
   --font-display: var(--font-newsreader), serif;
   --font-sans: var(--font-work-sans), sans-serif;
   --font-mono: var(--font-space-mono), monospace;
-
-  --spacing-18: 4.5rem;
-  --spacing-22: 5.5rem;
-
-  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  --ease-fluid: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 * {
@@ -37,42 +25,42 @@ html {
 
 body {
   min-height: 100vh;
-  background-color: var(--color-background);
-  color: var(--color-ink);
+  background-color: var(--color-canvas-blue);
+  color: var(--color-ink-alabaster);
+  overflow: hidden; /* We'll handle scrolling in specific containers to keep the layout strict */
 }
 
 ::selection {
-  background-color: var(--color-accent-copper-dim);
-  color: var(--color-ink);
+  background-color: var(--color-accent-vermilion);
+  color: var(--color-ink-alabaster);
 }
 
+/* Brutalist scrollbar */
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 12px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-background);
+  background: var(--color-canvas-blue);
+  border-left: 2px solid var(--color-ink-alabaster);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-hairline-dark);
+  background: var(--color-ink-alabaster);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-ink-tertiary);
+  background: var(--color-accent-vermilion);
 }
 
 *:focus-visible {
   outline: none;
-  box-shadow: inset 0 0 0 1px var(--color-accent-copper);
+  box-shadow: inset 0 0 0 4px var(--color-accent-absinthe);
 }
 
-@utility hairline-b {
-  border-bottom: 1px solid var(--color-hairline);
+/* Text stroke utility for hollow text effects */
+@utility text-stroke {
+  -webkit-text-stroke: 1px var(--color-ink-alabaster);
+  color: transparent;
 }
-@utility hairline-t {
-  border-top: 1px solid var(--color-hairline);
-}
-@utility hairline-l {
-  border-left: 1px solid var(--color-hairline);
-}
-@utility hairline-r {
-  border-right: 1px solid var(--color-hairline);
+@utility text-stroke-vermilion {
+  -webkit-text-stroke: 1px var(--color-accent-vermilion);
+  color: transparent;
 }

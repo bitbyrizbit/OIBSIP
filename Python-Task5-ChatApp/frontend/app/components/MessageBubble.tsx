@@ -8,29 +8,31 @@ interface MessageBubbleProps {
 }
 
 export default function MessageBubble({ message, isOwn }: MessageBubbleProps) {
-  const time = new Date(message.sent_at).toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const len = message.content.length;
+  
+  // Dynamic scaling based on character count
+  let fontClass = "text-[2rem] leading-tight md:text-[3rem]";
+  if (len < 15) {
+    fontClass = "text-[6rem] leading-[0.85] md:text-[10rem]";
+  } else if (len < 40) {
+    fontClass = "text-[4rem] leading-[0.9] md:text-[7rem]";
+  } else if (len < 100) {
+    fontClass = "text-[3rem] leading-[0.95] md:text-[5rem]";
+  }
 
   return (
     <motion.div
-      layout
-      initial={{ opacity: 0, y: 20, scale: 0.98 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ type: "spring", stiffness: 260, damping: 20 }}
-      className={`group flex items-start gap-6 py-5 px-6 rounded-sm bg-surface transition-colors hover:bg-surface-raised shadow-sm ${isOwn ? "border-r-2 border-accent-copper" : "border-l-2 border-ink-tertiary"}`}
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      className={`flex flex-col w-full py-12 ${isOwn ? "items-end text-right" : "items-start text-left"}`}
     >
-      <div className={`w-32 pt-1 font-sans text-[10px] tracking-widest uppercase ${isOwn ? "text-accent-copper" : "text-ink-secondary"}`}>
+      <div className={`font-mono text-xs uppercase tracking-widest border-4 p-2 mb-4 bg-canvas-blue ${isOwn ? "border-accent-absinthe text-accent-absinthe" : "border-ink-alabaster text-ink-alabaster"}`}>
         {message.sender_username}
       </div>
       
-      <div className="flex-1 font-display text-[22px] leading-relaxed text-ink">
+      <div className={`font-sans font-black tracking-tighter uppercase break-words max-w-full ${fontClass} ${isOwn ? "text-accent-absinthe text-stroke" : "text-ink-alabaster"}`}>
         {renderEmojiShortcodes(message.content)}
-      </div>
-
-      <div className="w-16 pt-1.5 text-right font-sans text-[10px] tracking-wider text-ink-tertiary">
-        {time}
       </div>
     </motion.div>
   );

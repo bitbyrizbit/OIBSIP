@@ -28,7 +28,7 @@ export default function AuthScreen() {
       if (err instanceof ApiError) {
         setError(err.message);
       } else {
-        setError("Connection failed. Check credentials.");
+        setError("NETWORK REJECTED");
       }
     } finally {
       setLoading(false);
@@ -36,84 +36,92 @@ export default function AuthScreen() {
   }
 
   return (
-    <div className="flex h-screen items-center justify-center bg-background px-6 relative overflow-hidden">
-      {/* Cinematic lighting */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-surface-raised/20 via-background to-background pointer-events-none" />
+    <div className="flex h-screen bg-canvas-blue overflow-hidden">
       
-      <div className="w-full max-w-md relative z-10">
-        <div className="mb-16 text-center">
-          <p className="mb-4 font-sans text-[10px] tracking-[0.4em] text-accent-copper uppercase">
+      {/* Left decorative panel */}
+      <div className="hidden lg:flex w-1/2 bg-accent-vermilion items-center justify-center border-r-8 border-ink-alabaster relative">
+        <div className="absolute top-8 left-8">
+          <span className="font-mono text-xs uppercase tracking-widest text-ink-alabaster border-4 border-ink-alabaster p-2 bg-canvas-blue">
             Instrument No. 02
-          </p>
-          <h1 className="font-display text-7xl italic tracking-tight text-ink drop-shadow-md">Party Line</h1>
+          </span>
+        </div>
+        <h1 className="font-sans text-[12rem] font-black uppercase tracking-tighter leading-none text-ink-alabaster rotate-90 scale-150 mix-blend-overlay">
+          Party<br/>Line
+        </h1>
+      </div>
+
+      {/* Right form panel */}
+      <div className="flex-1 flex flex-col justify-center px-12 lg:px-24 relative">
+        
+        <div className="mb-16">
+          <h2 className="font-sans text-6xl font-black uppercase tracking-tighter text-ink-alabaster leading-none">
+            {mode === "login" ? "Initialize" : "Register"}
+          </h2>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-8 bg-surface p-10 rounded-sm shadow-xl hairline-t hairline-b hairline-l hairline-r border-hairline-dark">
-          <div className="text-center mb-2">
-            <h2 className="font-sans text-xs tracking-[0.2em] uppercase text-ink-secondary">
-              {mode === "login" ? "Establish Link" : "Register Operator"}
-            </h2>
-          </div>
-
-          <div className="relative">
-            <label className="absolute -top-4 left-0 font-sans text-[10px] tracking-widest text-ink-tertiary uppercase">Operator Name</label>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-8 max-w-xl">
+          <div className="flex flex-col gap-2">
+            <label className="font-mono text-xs uppercase tracking-widest text-accent-absinthe">Operator ID</label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="w-full border-0 hairline-b border-hairline-dark bg-transparent px-0 pb-2 pt-2 font-display text-2xl text-ink focus:outline-none focus:ring-0 focus:border-accent-copper transition-colors"
+              placeholder="USERNAME"
+              className="w-full bg-ink-alabaster text-canvas-blue px-6 py-4 font-sans text-4xl font-black uppercase tracking-tighter border-4 border-transparent focus:border-accent-absinthe focus:outline-none transition-colors"
             />
           </div>
 
           {mode === "register" && (
-            <div className="relative mt-2">
-              <label className="absolute -top-4 left-0 font-sans text-[10px] tracking-widest text-ink-tertiary uppercase">Dispatch Address</label>
+            <div className="flex flex-col gap-2">
+              <label className="font-mono text-xs uppercase tracking-widest text-accent-absinthe">Network Address</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full border-0 hairline-b border-hairline-dark bg-transparent px-0 pb-2 pt-2 font-display text-2xl text-ink focus:outline-none focus:ring-0 focus:border-accent-copper transition-colors"
+                placeholder="EMAIL"
+                className="w-full bg-ink-alabaster text-canvas-blue px-6 py-4 font-sans text-4xl font-black uppercase tracking-tighter border-4 border-transparent focus:border-accent-absinthe focus:outline-none transition-colors"
               />
             </div>
           )}
 
-          <div className="relative mt-2">
-            <label className="absolute -top-4 left-0 font-sans text-[10px] tracking-widest text-ink-tertiary uppercase">Cipher Code</label>
+          <div className="flex flex-col gap-2">
+            <label className="font-mono text-xs uppercase tracking-widest text-accent-absinthe">Cipher</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={8}
-              className="w-full border-0 hairline-b border-hairline-dark bg-transparent px-0 pb-2 pt-2 font-sans text-xl tracking-widest text-ink focus:outline-none focus:ring-0 focus:border-accent-copper transition-colors"
+              placeholder="PASSWORD"
+              className="w-full bg-ink-alabaster text-canvas-blue px-6 py-4 font-sans text-4xl font-black uppercase tracking-tighter border-4 border-transparent focus:border-accent-absinthe focus:outline-none transition-colors"
             />
           </div>
 
           {error && (
-            <p className="font-sans text-xs tracking-wide text-[#873232]">
-              Alert: {error}
-            </p>
+            <div className="bg-accent-vermilion border-4 border-ink-alabaster p-4">
+              <p className="font-sans text-xl font-bold uppercase tracking-tight text-ink-alabaster">
+                FATAL: {error}
+              </p>
+            </div>
           )}
 
-          <div className="mt-6 text-center">
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-accent-copper/10 hairline-t hairline-b hairline-l hairline-r border-accent-copper/30 py-4 font-sans text-xs tracking-[0.2em] uppercase text-accent-copper transition-all hover:bg-accent-copper hover:text-background hover:shadow-[0_0_15px_rgba(181,115,76,0.4)] disabled:opacity-30 active:scale-[0.98]"
-            >
-              {loading ? "Connecting..." : mode === "login" ? "Connect" : "Register"}
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full mt-8 bg-accent-vermilion border-4 border-ink-alabaster py-6 font-sans text-4xl font-black uppercase tracking-tighter text-ink-alabaster hover:bg-ink-alabaster hover:text-accent-vermilion transition-colors disabled:opacity-50"
+          >
+            {loading ? "Processing..." : mode === "login" ? "Execute" : "Join Network"}
+          </button>
         </form>
 
-        <div className="mt-12 text-center">
+        <div className="mt-12">
           <button
             onClick={() => setMode(mode === "login" ? "register" : "login")}
-            className="font-sans text-[10px] tracking-widest text-ink-tertiary uppercase transition-colors hover:text-accent-copper"
+            className="font-sans text-xl font-bold uppercase tracking-tight text-ink-alabaster hover:text-accent-absinthe transition-colors underline decoration-4 underline-offset-4"
           >
-            {mode === "login" ? "Require new clearance?" : "Return to active duty"}
+            {mode === "login" ? "Request new clearance ->" : "<- Return to login"}
           </button>
         </div>
       </div>
