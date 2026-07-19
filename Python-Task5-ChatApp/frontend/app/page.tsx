@@ -76,7 +76,7 @@ function ChatApp() {
         username={user.username}
         onLogout={logout}
       />
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col relative">
         {activeRoom ? (
           <>
             <ConversationHeader roomName={activeRoom.name} activeUsers={activeUsers} connected={connected} />

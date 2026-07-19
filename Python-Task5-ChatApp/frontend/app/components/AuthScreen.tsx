@@ -62,6 +62,16 @@ export default function AuthScreen() {
     }
   }
 
+  function goBack() {
+    if (stage === "new_or_returning") setStage("identity");
+    else if (stage === "dispatch") setStage("new_or_returning");
+    else if (stage === "cipher") {
+      if (isNew) setStage("dispatch");
+      else setStage("new_or_returning");
+    }
+    setError(null);
+  }
+
   return (
     <div style={{
       minHeight: "100vh",
@@ -105,7 +115,7 @@ export default function AuthScreen() {
               <p className="font-display" style={{ fontSize: "3rem", fontStyle: "italic", color: "#F2EAD8", marginBottom: "40px", lineHeight: 1.2 }}>
                 Ah, {username}. Have you called this line before?
               </p>
-              <div style={{ display: "flex", gap: "20px" }}>
+              <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
                 <button
                   onClick={() => { setIsNew(false); setStage("cipher"); }}
                   style={{
@@ -128,6 +138,15 @@ export default function AuthScreen() {
                 >
                   No, this is my first time.
                 </button>
+                <button 
+                  onClick={goBack}
+                  style={{ 
+                    background: "none", border: "none", color: "rgba(242, 234, 216, 0.3)", 
+                    fontSize: "1rem", cursor: "pointer", textDecoration: "underline", marginLeft: "10px" 
+                  }}
+                >
+                  Wait, that's not my name
+                </button>
               </div>
             </motion.div>
           )}
@@ -137,7 +156,7 @@ export default function AuthScreen() {
               <p className="font-display" style={{ fontSize: "3rem", fontStyle: "italic", color: "#F2EAD8", marginBottom: "40px", lineHeight: 1.2 }}>
                 Where should we direct your missives?
               </p>
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} style={{ position: "relative" }}>
                 <input
                   ref={inputRef}
                   type="email"
@@ -150,6 +169,14 @@ export default function AuthScreen() {
                   }}
                 />
               </form>
+              <div style={{ marginTop: "24px" }}>
+                <button 
+                  onClick={goBack}
+                  style={{ background: "none", border: "none", color: "rgba(242, 234, 216, 0.4)", fontSize: "1rem", cursor: "pointer", textDecoration: "underline", padding: 0 }}
+                >
+                  Go back
+                </button>
+              </div>
             </motion.div>
           )}
 
@@ -172,11 +199,19 @@ export default function AuthScreen() {
                   }}
                 />
               </form>
-              {error && (
-                <p style={{ marginTop: "20px", color: "#C9724A", fontStyle: "italic", fontSize: "1.2rem" }}>
-                  {error}
-                </p>
-              )}
+              <div style={{ marginTop: "24px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <button 
+                  onClick={goBack}
+                  style={{ background: "none", border: "none", color: "rgba(242, 234, 216, 0.4)", fontSize: "1rem", cursor: "pointer", textDecoration: "underline", padding: 0 }}
+                >
+                  Go back
+                </button>
+                {error && (
+                  <p style={{ color: "#C9724A", fontStyle: "italic", fontSize: "1.2rem", margin: 0 }}>
+                    {error}
+                  </p>
+                )}
+              </div>
             </motion.div>
           )}
 

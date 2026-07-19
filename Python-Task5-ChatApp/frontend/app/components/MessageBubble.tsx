@@ -9,7 +9,8 @@ interface MessageBubbleProps {
 }
 
 export default function MessageBubble({ message, isOwn, index }: MessageBubbleProps) {
-  const time = new Date(message.sent_at).toLocaleTimeString([], {
+  const dateStr = message.sent_at.endsWith("Z") ? message.sent_at : message.sent_at + "Z";
+  const time = new Date(dateStr).toLocaleTimeString([], {
     hour: "numeric",
     minute: "2-digit",
   });
