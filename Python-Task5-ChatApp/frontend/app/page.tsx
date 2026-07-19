@@ -53,7 +53,7 @@ function ChatApp() {
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
-        <p className="font-mono text-sm text-ink-tertiary">picking up the line...</p>
+        <p className="font-mono text-xs tracking-widest text-ink-tertiary">[ establishing connection... ]</p>
       </div>
     );
   }

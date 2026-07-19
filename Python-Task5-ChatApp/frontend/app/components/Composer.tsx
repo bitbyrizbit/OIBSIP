@@ -31,21 +31,26 @@ export default function Composer({ onSend, onTyping, disabled }: ComposerProps) 
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center gap-3 border-t border-hairline bg-background px-8 py-5">
+    <form onSubmit={handleSubmit} className="flex items-center gap-6 hairline-t bg-background px-12 py-6">
+      <div className="font-mono text-xs text-ink-secondary">
+        [ INPUT ]
+      </div>
       <input
         type="text"
         value={value}
         onChange={handleChange}
-        placeholder="say something down the line..."
+        placeholder="Draft your transmission..."
         disabled={disabled}
-        className="flex-1 rounded-md border border-hairline bg-surface px-4 py-2.5 font-sans text-sm text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-accent-gold"
+        className="flex-1 bg-transparent font-display text-2xl italic text-ink placeholder:text-ink-tertiary focus:outline-none focus:ring-0 disabled:opacity-50"
       />
       <button
         type="submit"
         disabled={disabled}
-        className="rounded-md bg-ink px-5 py-2.5 font-mono text-xs uppercase tracking-widest text-background transition-opacity duration-300 hover:opacity-90 disabled:opacity-40"
+        className="group relative font-mono text-xs tracking-[0.2em] text-ink transition-colors disabled:opacity-30"
       >
-        ring
+        <span className="relative z-10">transmit</span>
+        {/* Austere underline hover effect */}
+        <span className="absolute bottom-0 left-0 h-px w-0 bg-ink transition-all duration-300 group-hover:w-full" />
       </button>
     </form>
   );

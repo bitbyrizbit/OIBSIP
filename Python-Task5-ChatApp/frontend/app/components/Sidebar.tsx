@@ -2,7 +2,6 @@
 
 import { useState, FormEvent } from "react";
 import type { Room } from "../lib/types";
-import { motion } from "framer-motion";
 
 interface SidebarProps {
   rooms: Room[];
@@ -28,67 +27,75 @@ export default function Sidebar({ rooms, activeRoomId, onSelectRoom, onCreateRoo
   }
 
   return (
-    <aside className="flex h-full w-72 flex-col border-r border-hairline bg-surface">
-      <div className="border-b border-hairline px-6 py-8">
-        <h1 className="font-display text-2xl italic text-ink">Party Line</h1>
-        <p className="mt-1 font-mono text-xs uppercase tracking-widest text-ink-tertiary">
+    <aside className="flex h-full w-72 flex-col hairline-r bg-background">
+      <div className="hairline-b px-8 py-10">
+        <h1 className="font-display text-3xl tracking-tight text-ink">Party Line</h1>
+        <p className="mt-2 font-mono text-[10px] tracking-widest text-ink-tertiary">
           instrument no. 02
         </p>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-3 py-4">
-        <div className="flex items-center justify-between px-3 pb-2">
-          <p className="font-mono text-xs uppercase tracking-widest text-ink-tertiary">the lines</p>
+      <div className="flex-1 overflow-y-auto px-6 py-8">
+        <div className="flex items-center justify-between pb-6">
+          <p className="font-sans small-caps text-xs text-ink-secondary">The Ledger</p>
           <button
             onClick={() => setShowCreate(!showCreate)}
-            className="font-mono text-xs text-accent-gold hover:text-accent-gold-dim"
+            className="font-mono text-xs text-ink-secondary transition-colors hover:text-ink"
           >
-            + new
+            [ new ]
           </button>
         </div>
 
         {showCreate && (
-          <form onSubmit={handleCreate} className="px-3 pb-3">
+          <form onSubmit={handleCreate} className="mb-6">
             <input
               autoFocus
               type="text"
               value={newRoomName}
               onChange={(e) => setNewRoomName(e.target.value)}
-              placeholder="name it..."
-              className="w-full rounded-md border border-hairline bg-background px-3 py-1.5 font-sans text-sm text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-accent-gold"
+              placeholder="Name it..."
+              className="w-full border-0 hairline-b bg-transparent px-0 py-2 font-display text-lg italic text-ink placeholder:text-ink-tertiary focus:outline-none focus:ring-0 focus:border-ink"
             />
           </form>
         )}
 
-        {rooms.map((room) => (
-          <button
-            key={room.id}
-            onClick={() => onSelectRoom(room.id)}
-            className="relative w-full rounded-md px-3 py-2.5 text-left font-sans text-sm"
-          >
-            {activeRoomId === room.id && (
-              <motion.div
-                layoutId="active-room"
-                className="absolute inset-0 rounded-md bg-surface-raised"
-                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              />
-            )}
-            <span
-              className={`relative transition-colors duration-300 ${
-                activeRoomId === room.id ? "text-ink" : "text-ink-secondary hover:text-ink"
-              }`}
-            >
-              {room.name}
-            </span>
-          </button>
-        ))}
+        <div className="flex flex-col space-y-1">
+          {rooms.map((room) => {
+            const isActive = activeRoomId === room.id;
+            return (
+              <button
+                key={room.id}
+                onClick={() => onSelectRoom(room.id)}
+                className="group relative flex w-full items-center justify-between py-2 text-left transition-all duration-200"
+              >
+                <span
+                  className={`relative ${
+                    isActive
+                      ? "font-display text-xl italic text-ink"
+                      : "font-sans text-sm text-ink-secondary group-hover:text-ink group-hover:italic"
+                  }`}
+                >
+                  {room.name}
+                </span>
+                
+                {/* Austere active indicator - just a small dash on the right */}
+                {isActive && (
+                  <span className="font-mono text-xs text-ink">—</span>
+                )}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      <div className="border-t border-hairline px-6 py-4">
-        <p className="font-mono text-xs text-ink-tertiary">signed in as {username}</p>
-        <button onClick={onLogout} className="mt-1 font-mono text-xs text-accent-red hover:text-accent-red-dim">
-          hang up
-        </button>
+      <div className="hairline-t px-8 py-6">
+        <p className="font-mono text-[10px] tracking-widest text-ink-secondary">operator</p>
+        <div className="mt-2 flex items-center justify-between">
+          <span className="font-sans text-sm text-ink">{username}</span>
+          <button onClick={onLogout} className="font-mono text-[10px] tracking-widest text-accent-red hover:text-accent-red-dim">
+            [ drop ]
+          </button>
+        </div>
       </div>
     </aside>
   );

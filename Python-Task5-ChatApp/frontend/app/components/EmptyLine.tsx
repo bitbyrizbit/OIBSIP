@@ -1,11 +1,9 @@
 export default function EmptyLine() {
   return (
-    <div className="flex h-full flex-1 flex-col items-center justify-center px-8 text-center">
-      <p className="font-display text-2xl italic text-ink-secondary">
-        the line is quiet.
-      </p>
-      <p className="mt-2 max-w-sm font-sans text-sm text-ink-tertiary">
-        pick a line from the left, or start one of your own, to get things ringing.
+    <div className="flex flex-1 flex-col items-center justify-center bg-background">
+      <h2 className="font-display text-4xl italic text-ink-secondary">No Active Connection</h2>
+      <p className="mt-4 font-mono text-xs tracking-[0.2em] text-ink-tertiary">
+        select a line from the ledger to begin
       </p>
     </div>
   );

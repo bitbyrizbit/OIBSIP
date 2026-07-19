@@ -15,22 +15,23 @@ export default function MessageBubble({ message, isOwn }: MessageBubbleProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10, scale: 0.98 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-      className={`flex flex-col ${isOwn ? "items-end" : "items-start"}`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.15, ease: "linear" }}
+      className={`group flex items-start py-4 hairline-b transition-colors hover:bg-surface/50`}
     >
-      {!isOwn && (
-        <p className="mb-1 px-1 font-mono text-xs text-ink-tertiary">{message.sender_username}</p>
-      )}
-      <div
-        className={`max-w-md rounded-lg px-4 py-2.5 font-sans text-sm leading-relaxed ${
-          isOwn ? "bg-accent-red text-background" : "bg-surface text-ink"
-        }`}
-      >
+      <div className={`w-48 pt-0.5 font-mono text-xs ${isOwn ? "text-accent-red" : "text-ink"}`}>
+        {message.sender_username}
+        {isOwn && <span className="ml-2 opacity-50">[ self ]</span>}
+      </div>
+      
+      <div className="flex-1 pr-8 font-sans text-base leading-relaxed text-ink">
         {renderEmojiShortcodes(message.content)}
       </div>
-      <p className="mt-1 px-1 font-mono text-xs text-ink-tertiary">{time}</p>
+
+      <div className="w-24 pt-1 text-right font-mono text-[10px] text-ink-tertiary">
+        {time}
+      </div>
     </motion.div>
   );
 }

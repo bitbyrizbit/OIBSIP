@@ -1,17 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #F5F1E8;
-  --color-surface: #EBE4D3;
-  --color-surface-raised: #E2D9C2;
-  --color-ink: #2B2620;
-  --color-ink-secondary: #6B6355;
-  --color-ink-tertiary: #948C7A;
-  --color-accent-red: #C1442D;
-  --color-accent-red-dim: #9E3623;
-  --color-accent-gold: #B8934A;
-  --color-accent-gold-dim: #8F7238;
-  --color-hairline: #DDD4BE;
+  --color-background: #F9F8F6;
+  --color-surface: #F2EFE9;
+  --color-surface-raised: #EAE6DD;
+  --color-ink: #1C1B1A;
+  --color-ink-secondary: #73706A;
+  --color-ink-tertiary: #A6A29A;
+  --color-accent-red: #7C2A20;
+  --color-accent-red-dim: #63221A;
+  --color-accent-gold: #968668;
+  --color-accent-gold-dim: #7A6D54;
+  --color-hairline: #E5E1D8;
+  --color-hairline-dark: #C9C4B8;
 
   --font-display: var(--font-newsreader), serif;
   --font-sans: var(--font-work-sans), sans-serif;
@@ -21,32 +22,69 @@
   --spacing-22: 5.5rem;
 
   --ease-line: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-sharp: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 * {
   box-sizing: border-box;
+  /* Enforce sharp corners everywhere */
+  border-radius: 0 !important;
 }
 
 html {
   scroll-behavior: smooth;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   min-height: 100vh;
+  background-color: var(--color-background);
+  color: var(--color-ink);
 }
 
 ::selection {
-  background-color: #C1442D;
-  color: #F5F1E8;
+  background-color: var(--color-ink);
+  color: var(--color-background);
 }
 
+/* Elegant minimalist scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 ::-webkit-scrollbar-track {
-  background: #F5F1E8;
+  background: var(--color-background);
 }
 ::-webkit-scrollbar-thumb {
-  background: #DDD4BE;
-  border-radius: 3px;
+  background: var(--color-hairline-dark);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ink-tertiary);
+}
+
+/* Remove default focus outlines and replace with crisp sharp borders */
+*:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 1px var(--color-ink);
+}
+
+/* Custom utilities for typographic elegance */
+@utility small-caps {
+  font-variant-caps: small-caps;
+  text-transform: lowercase;
+  letter-spacing: 0.05em;
+}
+
+@utility hairline-b {
+  border-bottom: 1px solid var(--color-hairline);
+}
+@utility hairline-t {
+  border-top: 1px solid var(--color-hairline);
+}
+@utility hairline-l {
+  border-left: 1px solid var(--color-hairline);
+}
+@utility hairline-r {
+  border-right: 1px solid var(--color-hairline);
 }

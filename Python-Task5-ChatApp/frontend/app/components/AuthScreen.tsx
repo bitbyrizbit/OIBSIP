@@ -28,7 +28,7 @@ export default function AuthScreen() {
       if (err instanceof ApiError) {
         setError(err.message);
       } else {
-        setError("something went wrong. try again.");
+        setError("Transmission failed. Re-verify credentials.");
       }
     } finally {
       setLoading(false);
@@ -37,58 +37,82 @@ export default function AuthScreen() {
 
   return (
     <div className="flex h-screen items-center justify-center bg-background px-6">
-      <div className="w-full max-w-sm">
-        <h1 className="font-display text-3xl italic text-ink">Party Line</h1>
-        <p className="mt-2 font-sans text-sm text-ink-secondary">
-          {mode === "login" ? "pick up the line." : "get yourself a line."}
-        </p>
+      <div className="w-full max-w-md">
+        <div className="mb-12 text-center">
+          <p className="mb-4 font-mono text-[10px] tracking-[0.3em] text-ink-tertiary">
+            instrument no. 02
+          </p>
+          <h1 className="font-display text-6xl tracking-tight text-ink">Party Line</h1>
+          <p className="mt-4 font-sans small-caps text-sm text-ink-secondary">
+            {mode === "login" ? "Establish Connection" : "Register New Operator"}
+          </p>
+        </div>
 
-        <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-4">
-          <input
-            type="text"
-            placeholder="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            className="border-b border-hairline bg-transparent py-2 font-sans text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-accent-red"
-          />
-          {mode === "register" && (
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          <div className="relative">
+            <label className="absolute -top-3 left-0 font-mono text-[10px] tracking-widest text-ink-tertiary">username</label>
             <input
-              type="email"
-              placeholder="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
-              className="border-b border-hairline bg-transparent py-2 font-sans text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-accent-red"
+              className="w-full border-0 hairline-b bg-transparent px-0 pb-2 pt-4 font-display text-2xl italic text-ink focus:outline-none focus:ring-0 focus:border-ink"
             />
+          </div>
+
+          {mode === "register" && (
+            <div className="relative mt-2">
+              <label className="absolute -top-3 left-0 font-mono text-[10px] tracking-widest text-ink-tertiary">email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full border-0 hairline-b bg-transparent px-0 pb-2 pt-4 font-display text-2xl italic text-ink focus:outline-none focus:ring-0 focus:border-ink"
+              />
+            </div>
           )}
-          <input
-            type="password"
-            placeholder="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            minLength={8}
-            className="border-b border-hairline bg-transparent py-2 font-sans text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-accent-red"
-          />
 
-          {error && <p className="font-sans text-sm text-accent-red">{error}</p>}
+          <div className="relative mt-2">
+            <label className="absolute -top-3 left-0 font-mono text-[10px] tracking-widest text-ink-tertiary">cipher</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={8}
+              className="w-full border-0 hairline-b bg-transparent px-0 pb-2 pt-4 font-sans text-xl tracking-widest text-ink focus:outline-none focus:ring-0 focus:border-ink"
+            />
+          </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-2 rounded-md bg-ink py-2.5 font-sans text-sm text-background transition-opacity duration-300 hover:opacity-90 disabled:opacity-50"
-          >
-            {loading ? "connecting..." : mode === "login" ? "pick up" : "join the line"}
-          </button>
+          {error && (
+            <p className="font-mono text-xs text-accent-red">
+              [ ERROR: {error} ]
+            </p>
+          )}
+
+          <div className="mt-8 text-center">
+            <button
+              type="submit"
+              disabled={loading}
+              className="group relative inline-block font-mono text-xs tracking-[0.2em] text-ink transition-colors disabled:opacity-30"
+            >
+              <span className="relative z-10">
+                {loading ? "authenticating..." : mode === "login" ? "connect" : "register"}
+              </span>
+              <span className="absolute bottom-[-4px] left-0 h-px w-0 bg-ink transition-all duration-300 group-hover:w-full" />
+            </button>
+          </div>
         </form>
 
-        <button
-          onClick={() => setMode(mode === "login" ? "register" : "login")}
-          className="mt-6 font-mono text-xs uppercase tracking-widest text-ink-tertiary hover:text-ink-secondary"
-        >
-          {mode === "login" ? "new here? join the line" : "already on the line? pick up"}
-        </button>
+        <div className="mt-16 text-center">
+          <button
+            onClick={() => setMode(mode === "login" ? "register" : "login")}
+            className="font-mono text-[10px] tracking-widest text-ink-tertiary hover:text-ink-secondary"
+          >
+            {mode === "login" ? "[ issue new credentials ]" : "[ authenticate existing operator ]"}
+          </button>
+        </div>
       </div>
     </div>
   );
