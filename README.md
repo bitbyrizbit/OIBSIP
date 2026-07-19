@@ -19,6 +19,7 @@ rather than a typical dashboard. FastAPI, Next.js, Framer Motion.
 someone's on the line. A real-time chat application built around 1900s
 party-line telephone culture rather than a generic messaging clone.
 FastAPI, WebSockets, Next.js, Framer Motion.
+[Live](https://oibsip-2ac8.vercel.app)
 
 ---
 
