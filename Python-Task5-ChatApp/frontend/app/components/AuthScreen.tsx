@@ -1,24 +1,36 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useRef, useEffect } from "react";
 import { login, register, getMe, ApiError } from "../lib/api";
 import { useAuth } from "../lib/AuthContext";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function AuthScreen() {
   const { setSession } = useAuth();
-  const [mode, setMode] = useState<"login" | "register">("login");
+  
+  // Stages: 'identity' -> 'new_or_returning' -> (if new) 'dispatch' -> 'cipher' -> 'connecting'
+  const [stage, setStage] = useState<"identity" | "new_or_returning" | "dispatch" | "cipher" | "connecting">("identity");
+  
   const [username, setUsername] = useState("");
+  const [isNew, setIsNew] = useState<boolean | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [stage, error]);
+
+  async function handleConnect() {
     setError(null);
-    setLoading(true);
+    setStage("connecting");
     try {
-      if (mode === "register") {
+      if (isNew) {
         await register(username, email, password);
       }
       const { access_token } = await login(username, password);
@@ -28,257 +40,155 @@ export default function AuthScreen() {
       if (err instanceof ApiError) {
         setError(err.message);
       } else {
-        setError("Connection failed. Please try again.");
+        setError("The line went dead. Try again.");
       }
-    } finally {
-      setLoading(false);
+      // Reset to cipher if it failed
+      setStage("cipher");
+      setPassword("");
     }
   }
 
-  const inputStyle: React.CSSProperties = {
-    width: "100%",
-    background: "#111318",
-    border: "1px solid rgba(255,255,255,0.1)",
-    padding: "14px 18px",
-    fontSize: "1rem",
-    color: "#F4F0E8",
-    outline: "none",
-    letterSpacing: "0.01em",
-    borderRadius: "2px",
-    caretColor: "#C9964A",
-    fontFamily: "var(--font-work-sans), sans-serif",
-    transition: "border-color 0.2s",
-  };
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    if (error) setError(null);
+
+    if (stage === "identity") {
+      if (username.trim()) setStage("new_or_returning");
+    } else if (stage === "dispatch") {
+      if (email.trim()) setStage("cipher");
+    } else if (stage === "cipher") {
+      if (password.length >= 8) handleConnect();
+      else setError("Your cipher must be at least 8 characters long.");
+    }
+  }
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#0C0D11",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "24px",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
-      {/* Ambient background glow */}
-      <div
-        style={{
-          position: "absolute",
-          top: "30%",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "800px",
-          height: "400px",
-          background: "radial-gradient(ellipse, rgba(201,150,74,0.05) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }}
-      />
+    <div style={{
+      minHeight: "100vh",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: "5vw",
+      position: "relative",
+    }}>
+      <div style={{ position: "absolute", top: "40px", left: "40px" }}>
+        <h1 className="font-display" style={{ fontSize: "1.2rem", fontStyle: "italic", color: "rgba(242, 234, 216, 0.4)" }}>Party Line</h1>
+      </div>
 
-      <div style={{ width: "100%", maxWidth: "460px", position: "relative", zIndex: 1 }}>
-        {/* Brand mark */}
-        <div style={{ textAlign: "center", marginBottom: "48px" }}>
-          <h1
-            className="font-display"
-            style={{
-              fontSize: "3.5rem",
-              fontStyle: "italic",
-              fontWeight: 300,
-              color: "#F4F0E8",
-              letterSpacing: "-0.02em",
-              lineHeight: 1,
-            }}
-          >
-            Party Line
-          </h1>
-          <div
-            style={{
-              marginTop: "12px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "10px",
-            }}
-          >
-            {/* Decorative lines flanking the subtitle */}
-            <div style={{ height: "1px", width: "40px", background: "rgba(201,150,74,0.4)" }} />
-            <span
-              className="font-sans"
-              style={{ fontSize: "10px", letterSpacing: "0.2em", color: "#C9964A", textTransform: "uppercase" }}
-            >
-              Instrument No. 02
-            </span>
-            <div style={{ height: "1px", width: "40px", background: "rgba(201,150,74,0.4)" }} />
-          </div>
-        </div>
-
-        {/* The Ticket Form */}
-        <div
-          style={{
-            background: "#111318",
-            border: "1px solid rgba(255,255,255,0.07)",
-            borderRadius: "2px",
-            overflow: "hidden",
-            boxShadow: "0 32px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,150,74,0.05) inset",
-          }}
-        >
-          {/* Ticket header strip */}
-          <div
-            style={{
-              background: "rgba(201,150,74,0.06)",
-              borderBottom: "1px solid rgba(201,150,74,0.15)",
-              padding: "14px 24px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <span
-              className="font-sans"
-              style={{ fontSize: "10px", letterSpacing: "0.2em", color: "#C9964A", textTransform: "uppercase" }}
-            >
-              {mode === "login" ? "Access Request" : "Operator Registration"}
-            </span>
-            {/* Barcode decoration */}
-            <div style={{ display: "flex", gap: "2px", alignItems: "center", opacity: 0.4 }}>
-              {Array.from({ length: 14 }).map((_, i) => (
-                <div key={i} style={{ width: i % 3 === 0 ? "3px" : "1.5px", height: "12px", background: "#C9964A" }} />
-              ))}
-            </div>
-          </div>
-
-          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "20px", padding: "28px 24px 24px" }}>
-            <div>
-              <label
-                className="font-sans"
-                style={{ display: "block", fontSize: "10px", letterSpacing: "0.12em", color: "#7A8A9E", textTransform: "uppercase", marginBottom: "8px" }}
-              >
-                Operator ID
-              </label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                placeholder="Your username"
-                style={inputStyle}
-                onFocus={(e) => (e.currentTarget.style.borderColor = "rgba(201,150,74,0.5)")}
-                onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")}
-              />
-            </div>
-
-            {mode === "register" && (
-              <div>
-                <label
-                  className="font-sans"
-                  style={{ display: "block", fontSize: "10px", letterSpacing: "0.12em", color: "#7A8A9E", textTransform: "uppercase", marginBottom: "8px" }}
-                >
-                  Network Address
-                </label>
+      <div style={{ width: "100%", maxWidth: "800px" }}>
+        <AnimatePresence mode="wait">
+          
+          {stage === "identity" && (
+            <motion.div key="identity" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
+              <p className="font-display" style={{ fontSize: "3rem", fontStyle: "italic", color: "#F2EAD8", marginBottom: "40px", lineHeight: 1.2 }}>
+                Who is picking up the receiver?
+              </p>
+              <form onSubmit={handleSubmit}>
                 <input
+                  ref={inputRef}
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Your name..."
+                  style={{
+                    width: "100%", background: "transparent", border: "none", borderBottom: "2px solid rgba(242, 234, 216, 0.2)",
+                    fontSize: "2rem", color: "#C9724A", padding: "10px 0", outline: "none", fontFamily: "var(--font-work-sans)"
+                  }}
+                />
+              </form>
+            </motion.div>
+          )}
+
+          {stage === "new_or_returning" && (
+            <motion.div key="new_or_returning" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
+              <p className="font-display" style={{ fontSize: "3rem", fontStyle: "italic", color: "#F2EAD8", marginBottom: "40px", lineHeight: 1.2 }}>
+                Ah, {username}. Have you called this line before?
+              </p>
+              <div style={{ display: "flex", gap: "20px" }}>
+                <button
+                  onClick={() => { setIsNew(false); setStage("cipher"); }}
+                  style={{
+                    background: "transparent", border: "1px solid #7BAFC4", color: "#7BAFC4", padding: "16px 32px",
+                    fontSize: "1.2rem", cursor: "pointer", borderRadius: "40px", transition: "all 0.2s"
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = "#7BAFC4"; e.currentTarget.style.color = "#14110F"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#7BAFC4"; }}
+                >
+                  Yes, I'm returning.
+                </button>
+                <button
+                  onClick={() => { setIsNew(true); setStage("dispatch"); }}
+                  style={{
+                    background: "transparent", border: "1px solid #C9724A", color: "#C9724A", padding: "16px 32px",
+                    fontSize: "1.2rem", cursor: "pointer", borderRadius: "40px", transition: "all 0.2s"
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = "#C9724A"; e.currentTarget.style.color = "#14110F"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#C9724A"; }}
+                >
+                  No, this is my first time.
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {stage === "dispatch" && (
+            <motion.div key="dispatch" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
+              <p className="font-display" style={{ fontSize: "3rem", fontStyle: "italic", color: "#F2EAD8", marginBottom: "40px", lineHeight: 1.2 }}>
+                Where should we direct your missives?
+              </p>
+              <form onSubmit={handleSubmit}>
+                <input
+                  ref={inputRef}
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  required
-                  placeholder="your@email.com"
-                  style={inputStyle}
-                  onFocus={(e) => (e.currentTarget.style.borderColor = "rgba(201,150,74,0.5)")}
-                  onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")}
+                  placeholder="Your dispatch address (email)..."
+                  style={{
+                    width: "100%", background: "transparent", border: "none", borderBottom: "2px solid rgba(242, 234, 216, 0.2)",
+                    fontSize: "2rem", color: "#C9724A", padding: "10px 0", outline: "none", fontFamily: "var(--font-work-sans)"
+                  }}
                 />
-              </div>
-            )}
+              </form>
+            </motion.div>
+          )}
 
-            <div>
-              <label
-                className="font-sans"
-                style={{ display: "block", fontSize: "10px", letterSpacing: "0.12em", color: "#7A8A9E", textTransform: "uppercase", marginBottom: "8px" }}
-              >
-                Cipher
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={8}
-                placeholder="Min. 8 characters"
-                style={{ ...inputStyle, letterSpacing: "0.08em" }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = "rgba(201,150,74,0.5)")}
-                onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")}
-              />
-            </div>
-
-            {error && (
-              <div
-                style={{
-                  background: "rgba(196,75,53,0.1)",
-                  border: "1px solid rgba(196,75,53,0.3)",
-                  borderRadius: "2px",
-                  padding: "10px 14px",
-                }}
-              >
-                <p className="font-sans" style={{ fontSize: "12px", color: "#C44B35", letterSpacing: "0.03em" }}>
+          {stage === "cipher" && (
+            <motion.div key="cipher" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
+              <p className="font-display" style={{ fontSize: "3rem", fontStyle: "italic", color: "#F2EAD8", marginBottom: "40px", lineHeight: 1.2 }}>
+                What is your secret cipher, {username}?
+              </p>
+              <form onSubmit={handleSubmit}>
+                <input
+                  ref={inputRef}
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Your cipher..."
+                  style={{
+                    width: "100%", background: "transparent", border: "none", borderBottom: "2px solid rgba(242, 234, 216, 0.2)",
+                    fontSize: "2rem", color: "#C9724A", padding: "10px 0", outline: "none", fontFamily: "var(--font-work-sans)",
+                    letterSpacing: "0.2em"
+                  }}
+                />
+              </form>
+              {error && (
+                <p style={{ marginTop: "20px", color: "#C9724A", fontStyle: "italic", fontSize: "1.2rem" }}>
                   {error}
                 </p>
-              </div>
-            )}
+              )}
+            </motion.div>
+          )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="font-sans"
-              style={{
-                marginTop: "8px",
-                width: "100%",
-                background: "transparent",
-                border: "1px solid rgba(201,150,74,0.5)",
-                padding: "14px",
-                fontSize: "12px",
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                color: "#C9964A",
-                cursor: loading ? "default" : "pointer",
-                opacity: loading ? 0.6 : 1,
-                transition: "all 0.2s ease",
-                borderRadius: "2px",
-              }}
-              onMouseEnter={(e) => {
-                if (!loading) {
-                  e.currentTarget.style.background = "#C9964A";
-                  e.currentTarget.style.color = "#0C0D11";
-                }
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.color = "#C9964A";
-              }}
-            >
-              {loading ? "Connecting..." : mode === "login" ? "Establish Connection" : "Register Operator"}
-            </button>
-          </form>
-        </div>
+          {stage === "connecting" && (
+            <motion.div key="connecting" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
+              <p className="font-display" style={{ fontSize: "4rem", fontStyle: "italic", color: "#C9724A", animation: "ambient-pulse 2s infinite" }}>
+                Ringing the operator...
+              </p>
+            </motion.div>
+          )}
 
-        <div style={{ marginTop: "20px", textAlign: "center" }}>
-          <button
-            onClick={() => setMode(mode === "login" ? "register" : "login")}
-            className="font-sans"
-            style={{
-              background: "none",
-              border: "none",
-              fontSize: "12px",
-              color: "#7A8A9E",
-              cursor: "pointer",
-              letterSpacing: "0.05em",
-              transition: "color 0.2s",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "#F4F0E8")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "#7A8A9E")}
-          >
-            {mode === "login" ? "Need access? Register here →" : "← Back to login"}
-          </button>
-        </div>
+        </AnimatePresence>
       </div>
     </div>
   );

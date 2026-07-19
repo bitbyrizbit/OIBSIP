@@ -52,12 +52,10 @@ function ChatApp() {
 
   if (loading) {
     return (
-      <div style={{ display: "flex", height: "100vh", alignItems: "center", justifyContent: "center", background: "#0C0D11" }}>
-        <div style={{ textAlign: "center" }}>
-          <p className="font-display" style={{ fontSize: "1.4rem", fontStyle: "italic", color: "rgba(244,240,232,0.3)", letterSpacing: "-0.01em" }}>
-            Establishing connection...
-          </p>
-        </div>
+      <div style={{ display: "flex", height: "100vh", alignItems: "center", justifyContent: "center", background: "#14110F" }}>
+        <p className="font-display" style={{ fontSize: "2rem", fontStyle: "italic", color: "#C9724A", animation: "ambient-pulse 2s infinite" }}>
+          Finding the line...
+        </p>
       </div>
     );
   }

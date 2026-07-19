@@ -33,7 +33,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${newsreader.variable} ${workSans.variable} ${spaceMono.variable}`}>
-      <body className="bg-[#0C0D11] text-[#F4F0E8] font-sans antialiased">
+      <body className="bg-[#14110F] text-[#F2EAD8] font-sans antialiased">
         {children}
       </body>
     </html>

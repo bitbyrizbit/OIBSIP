@@ -1,37 +1,37 @@
 @import "tailwindcss";
 
 @theme {
-  /* Void: deep atmospheric background */
-  --color-void: #0C0D11;
-  --color-void-mid: #111318;
-  --color-void-surface: #181A21;
+  /* Mahogany void — warm dark, NOT generic black */
+  --color-void: #14110F;
+  --color-void-mid: #1E1A16;
+  --color-void-surface: #262018;
 
-  /* Ticket surfaces */
-  --color-bone: #F4F0E8;
-  --color-bone-dim: #E8E3D8;
-  --color-gunmetal: #1E2028;
-  --color-gunmetal-light: #252830;
+  /* Warm parchment text — not white */
+  --color-parchment: #F2EAD8;
+  --color-parchment-dim: #C8BFA8;
+  --color-parchment-ghost: rgba(242, 234, 216, 0.15);
 
-  /* Accents */
-  --color-saffron: #C9964A;
-  --color-saffron-dim: #A07A38;
-  --color-saffron-glow: rgba(201, 150, 74, 0.15);
-  --color-ember: #C44B35;
-  --color-mist: #A8B4C8;
-  --color-mist-dim: #7A8A9E;
+  /* Terracotta — warm copper analog, nobody uses this in UI */
+  --color-terracotta: #C9724A;
+  --color-terracotta-dim: #A35A38;
+  --color-terracotta-glow: rgba(201, 114, 74, 0.12);
 
-  /* Typography */
+  /* Telegraph wire blue — dusty steel, the insulation on old copper wire */
+  --color-wire: #7BAFC4;
+  --color-wire-dim: #5A8FA8;
+
+  --color-divider: rgba(242, 234, 216, 0.08);
+  --color-divider-warm: rgba(201, 114, 74, 0.2);
+
   --font-display: var(--font-newsreader), Georgia, serif;
   --font-sans: var(--font-work-sans), system-ui, sans-serif;
   --font-mono: var(--font-space-mono), monospace;
 
   --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 html {
   scroll-behavior: smooth;
@@ -42,41 +42,28 @@ html {
 
 body {
   min-height: 100vh;
-  background-color: var(--color-void);
-  color: var(--color-bone);
+  background-color: #14110F;
+  color: #F2EAD8;
 }
 
 ::selection {
-  background-color: var(--color-saffron);
-  color: var(--color-void);
+  background-color: #C9724A;
+  color: #14110F;
 }
 
-::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--color-gunmetal-light); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: var(--color-mist-dim); }
+::-webkit-scrollbar-thumb { background: rgba(242,234,216,0.1); }
+::-webkit-scrollbar-thumb:hover { background: rgba(201,114,74,0.4); }
 
-*:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--color-saffron);
+*:focus-visible { outline: 2px solid #C9724A; outline-offset: 2px; }
+
+@keyframes ambient-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
 }
 
-/* Perforated edge effect for tickets */
-@utility ticket-perf-left {
-  background-image: radial-gradient(circle, var(--color-void-mid) 4px, transparent 4px);
-  background-size: 1px 18px;
-  background-repeat: repeat-y;
-  background-position: left center;
-  padding-left: 20px;
-}
-
-/* Soft ambient glow */
-@keyframes ambient-breathe {
-  0%, 100% { opacity: 0.4; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.05); }
-}
-
-@keyframes ticker-blink {
+@keyframes cursor-blink {
   0%, 49% { opacity: 1; }
   50%, 100% { opacity: 0; }
 }
