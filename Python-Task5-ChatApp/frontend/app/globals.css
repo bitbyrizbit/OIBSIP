@@ -1,18 +1,16 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #F9F8F6;
-  --color-surface: #F2EFE9;
-  --color-surface-raised: #EAE6DD;
-  --color-ink: #1C1B1A;
-  --color-ink-secondary: #73706A;
-  --color-ink-tertiary: #A6A29A;
-  --color-accent-red: #7C2A20;
-  --color-accent-red-dim: #63221A;
-  --color-accent-gold: #968668;
-  --color-accent-gold-dim: #7A6D54;
-  --color-hairline: #E5E1D8;
-  --color-hairline-dark: #C9C4B8;
+  --color-background: #0B0B0C;
+  --color-surface: #141415;
+  --color-surface-raised: #1C1C1E;
+  --color-ink: #E8E3D9;
+  --color-ink-secondary: #9A9386;
+  --color-ink-tertiary: #605B53;
+  --color-accent-copper: #B5734C;
+  --color-accent-copper-dim: #875132;
+  --color-hairline: #262628;
+  --color-hairline-dark: #3A3A3D;
 
   --font-display: var(--font-newsreader), serif;
   --font-sans: var(--font-work-sans), sans-serif;
@@ -21,13 +19,12 @@
   --spacing-18: 4.5rem;
   --spacing-22: 5.5rem;
 
-  --ease-line: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-sharp: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-fluid: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 * {
   box-sizing: border-box;
-  /* Enforce sharp corners everywhere */
   border-radius: 0 !important;
 }
 
@@ -45,11 +42,10 @@ body {
 }
 
 ::selection {
-  background-color: var(--color-ink);
-  color: var(--color-background);
+  background-color: var(--color-accent-copper-dim);
+  color: var(--color-ink);
 }
 
-/* Elegant minimalist scrollbar */
 ::-webkit-scrollbar {
   width: 4px;
 }
@@ -63,17 +59,9 @@ body {
   background: var(--color-ink-tertiary);
 }
 
-/* Remove default focus outlines and replace with crisp sharp borders */
 *:focus-visible {
   outline: none;
-  box-shadow: inset 0 0 0 1px var(--color-ink);
-}
-
-/* Custom utilities for typographic elegance */
-@utility small-caps {
-  font-variant-caps: small-caps;
-  text-transform: lowercase;
-  letter-spacing: 0.05em;
+  box-shadow: inset 0 0 0 1px var(--color-accent-copper);
 }
 
 @utility hairline-b {

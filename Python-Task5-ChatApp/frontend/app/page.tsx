@@ -52,8 +52,9 @@ function ChatApp() {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <p className="font-mono text-xs tracking-widest text-ink-tertiary">[ establishing connection... ]</p>
+      <div className="flex h-screen items-center justify-center bg-background relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-surface/30 to-background pointer-events-none" />
+        <p className="font-sans text-xs tracking-[0.2em] uppercase text-accent-copper relative z-10">Establishing Connection...</p>
       </div>
     );
   }
