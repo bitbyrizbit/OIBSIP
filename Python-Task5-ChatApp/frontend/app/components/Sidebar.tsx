@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import type { Room } from "../lib/types";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface SidebarProps {
   rooms: Room[];
@@ -27,54 +28,178 @@ export default function Sidebar({ rooms, activeRoomId, onSelectRoom, onCreateRoo
   }
 
   return (
-    <aside className="flex h-full w-[25%] min-w-[300px] flex-col bg-accent-vermilion border-r-4 border-ink-alabaster text-ink-alabaster z-50">
-      
-      {/* Brutalist Header */}
-      <div className="p-8 border-b-4 border-ink-alabaster">
-        <h1 className="font-sans text-5xl font-bold tracking-tighter uppercase leading-none">Party<br/>Line</h1>
-        <p className="mt-4 font-mono text-xs uppercase tracking-widest border-t-2 border-ink-alabaster pt-2">
-          Inst. 02
-        </p>
+    <aside
+      className="flex h-full flex-col"
+      style={{
+        width: "280px",
+        minWidth: "280px",
+        background: "#111318",
+        borderRight: "1px solid rgba(255,255,255,0.07)",
+      }}
+    >
+      {/* Brand */}
+      <div
+        style={{
+          padding: "32px 28px 28px",
+          borderBottom: "1px solid rgba(255,255,255,0.07)",
+        }}
+      >
+        <h1
+          className="font-display"
+          style={{
+            fontSize: "2.2rem",
+            fontStyle: "italic",
+            fontWeight: 400,
+            color: "#F4F0E8",
+            lineHeight: 1,
+            letterSpacing: "-0.02em",
+          }}
+        >
+          Party Line
+        </h1>
+        <div
+          style={{
+            marginTop: "10px",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+          }}
+        >
+          <div
+            style={{
+              width: "6px",
+              height: "6px",
+              borderRadius: "50%",
+              background: "#C9964A",
+            }}
+          />
+          <span
+            className="font-sans"
+            style={{
+              fontSize: "10px",
+              letterSpacing: "0.15em",
+              color: "#7A8A9E",
+              textTransform: "uppercase",
+            }}
+          >
+            Instrument No. 02
+          </span>
+        </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-8 relative">
-        <div className="flex items-end justify-between border-b-4 border-ink-alabaster pb-2 mb-8">
-          <p className="font-display text-3xl italic">Index</p>
+      {/* Lines List */}
+      <div style={{ flex: 1, overflowY: "auto", padding: "20px 16px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "0 12px 16px",
+          }}
+        >
+          <span
+            className="font-sans"
+            style={{
+              fontSize: "10px",
+              letterSpacing: "0.15em",
+              color: "#7A8A9E",
+              textTransform: "uppercase",
+            }}
+          >
+            Connections
+          </span>
           <button
             onClick={() => setShowCreate(!showCreate)}
-            className="font-sans text-sm font-bold uppercase tracking-widest hover:text-canvas-blue transition-colors"
+            className="font-sans"
+            style={{
+              fontSize: "11px",
+              color: "#C9964A",
+              letterSpacing: "0.05em",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              transition: "color 0.2s",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "#F4F0E8")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "#C9964A")}
           >
-            [ + ]
+            + New
           </button>
         </div>
 
-        {showCreate && (
-          <form onSubmit={handleCreate} className="mb-8 border-4 border-ink-alabaster bg-canvas-blue p-2">
-            <input
-              autoFocus
-              type="text"
-              value={newRoomName}
-              onChange={(e) => setNewRoomName(e.target.value)}
-              placeholder="CREATE LINE"
-              className="w-full bg-transparent font-sans text-xl font-bold uppercase tracking-tight text-ink-alabaster placeholder:text-ink-alabaster/50 focus:outline-none focus:ring-0"
-            />
-          </form>
-        )}
+        <AnimatePresence>
+          {showCreate && (
+            <motion.form
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              onSubmit={handleCreate}
+              style={{ overflow: "hidden", marginBottom: "12px" }}
+            >
+              <input
+                autoFocus
+                type="text"
+                value={newRoomName}
+                onChange={(e) => setNewRoomName(e.target.value)}
+                placeholder="Line name..."
+                className="font-sans"
+                style={{
+                  width: "100%",
+                  background: "#181A21",
+                  border: "1px solid rgba(201,150,74,0.4)",
+                  padding: "10px 14px",
+                  fontSize: "14px",
+                  color: "#F4F0E8",
+                  outline: "none",
+                  borderRadius: "4px",
+                  letterSpacing: "0.01em",
+                }}
+              />
+            </motion.form>
+          )}
+        </AnimatePresence>
 
-        <div className="flex flex-col gap-4">
+        <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
           {rooms.map((room) => {
             const isActive = activeRoomId === room.id;
             return (
               <button
                 key={room.id}
                 onClick={() => onSelectRoom(room.id)}
-                className={`w-full text-left p-4 border-4 border-ink-alabaster transition-all duration-200 ${
-                  isActive 
-                    ? "bg-ink-alabaster text-accent-vermilion" 
-                    : "bg-transparent text-ink-alabaster hover:bg-canvas-blue hover:text-ink-alabaster hover:border-canvas-blue"
-                }`}
+                className="font-sans"
+                style={{
+                  position: "relative",
+                  width: "100%",
+                  textAlign: "left",
+                  padding: "12px 14px",
+                  background: isActive ? "rgba(201,150,74,0.08)" : "transparent",
+                  border: "none",
+                  borderLeft: isActive ? "2px solid #C9964A" : "2px solid transparent",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  borderRadius: "0 4px 4px 0",
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = "rgba(255,255,255,0.03)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = "transparent";
+                  }
+                }}
               >
-                <span className="font-sans text-2xl font-bold tracking-tight uppercase block leading-none">
+                <span
+                  style={{
+                    display: "block",
+                    fontSize: "14px",
+                    fontWeight: isActive ? 600 : 400,
+                    color: isActive ? "#F4F0E8" : "#7A8A9E",
+                    letterSpacing: "0.01em",
+                    transition: "color 0.2s",
+                  }}
+                >
                   {room.name}
                 </span>
               </button>
@@ -83,20 +208,47 @@ export default function Sidebar({ rooms, activeRoomId, onSelectRoom, onCreateRoo
         </div>
       </div>
 
-      <div className="p-8 border-t-4 border-ink-alabaster bg-accent-vermilion">
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col">
-            <span className="font-mono text-[10px] uppercase tracking-widest">Operator</span>
-            <span className="font-sans text-2xl font-bold uppercase tracking-tight">{username}</span>
-          </div>
-          <button 
-            onClick={onLogout} 
-            className="w-12 h-12 flex items-center justify-center border-4 border-ink-alabaster bg-ink-alabaster text-accent-vermilion font-bold text-xl hover:bg-canvas-blue hover:border-canvas-blue hover:text-ink-alabaster transition-colors"
-            title="Terminate"
+      {/* Operator Footer */}
+      <div
+        style={{
+          padding: "20px 28px",
+          borderTop: "1px solid rgba(255,255,255,0.07)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <div>
+          <p
+            className="font-sans"
+            style={{ fontSize: "10px", letterSpacing: "0.12em", color: "#7A8A9E", textTransform: "uppercase" }}
           >
-            X
-          </button>
+            Operator
+          </p>
+          <p
+            className="font-sans"
+            style={{ marginTop: "2px", fontSize: "14px", color: "#F4F0E8", fontWeight: 500 }}
+          >
+            {username}
+          </p>
         </div>
+        <button
+          onClick={onLogout}
+          className="font-sans"
+          style={{
+            fontSize: "11px",
+            letterSpacing: "0.08em",
+            color: "#7A8A9E",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            transition: "color 0.2s",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "#C44B35")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "#7A8A9E")}
+        >
+          Sign out
+        </button>
       </div>
     </aside>
   );

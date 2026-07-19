@@ -52,11 +52,12 @@ function ChatApp() {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-canvas-blue relative overflow-hidden">
-        <h2 className="font-sans text-[15rem] font-black uppercase tracking-tighter text-ink-alabaster opacity-10 leading-none text-center absolute">
-          WAIT
-        </h2>
-        <p className="font-sans text-4xl font-black uppercase tracking-tighter text-accent-absinthe relative z-10 animate-pulse">Initializing...</p>
+      <div style={{ display: "flex", height: "100vh", alignItems: "center", justifyContent: "center", background: "#0C0D11" }}>
+        <div style={{ textAlign: "center" }}>
+          <p className="font-display" style={{ fontSize: "1.4rem", fontStyle: "italic", color: "rgba(244,240,232,0.3)", letterSpacing: "-0.01em" }}>
+            Establishing connection...
+          </p>
+        </div>
       </div>
     );
   }

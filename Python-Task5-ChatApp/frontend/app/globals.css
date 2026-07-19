@@ -1,66 +1,82 @@
 @import "tailwindcss";
 
 @theme {
-  --color-canvas-blue: #002FA7; /* Yves Klein Blue */
-  --color-ink-alabaster: #FDFBF7;
-  --color-accent-vermilion: #FF3B00;
-  --color-accent-absinthe: #C0FF00;
+  /* Void: deep atmospheric background */
+  --color-void: #0C0D11;
+  --color-void-mid: #111318;
+  --color-void-surface: #181A21;
 
-  --font-display: var(--font-newsreader), serif;
-  --font-sans: var(--font-work-sans), sans-serif;
+  /* Ticket surfaces */
+  --color-bone: #F4F0E8;
+  --color-bone-dim: #E8E3D8;
+  --color-gunmetal: #1E2028;
+  --color-gunmetal-light: #252830;
+
+  /* Accents */
+  --color-saffron: #C9964A;
+  --color-saffron-dim: #A07A38;
+  --color-saffron-glow: rgba(201, 150, 74, 0.15);
+  --color-ember: #C44B35;
+  --color-mist: #A8B4C8;
+  --color-mist-dim: #7A8A9E;
+
+  /* Typography */
+  --font-display: var(--font-newsreader), Georgia, serif;
+  --font-sans: var(--font-work-sans), system-ui, sans-serif;
   --font-mono: var(--font-space-mono), monospace;
+
+  --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.1);
 }
 
 * {
   box-sizing: border-box;
-  border-radius: 0 !important;
 }
 
 html {
   scroll-behavior: smooth;
-  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
 }
 
 body {
   min-height: 100vh;
-  background-color: var(--color-canvas-blue);
-  color: var(--color-ink-alabaster);
-  overflow: hidden; /* We'll handle scrolling in specific containers to keep the layout strict */
+  background-color: var(--color-void);
+  color: var(--color-bone);
 }
 
 ::selection {
-  background-color: var(--color-accent-vermilion);
-  color: var(--color-ink-alabaster);
+  background-color: var(--color-saffron);
+  color: var(--color-void);
 }
 
-/* Brutalist scrollbar */
-::-webkit-scrollbar {
-  width: 12px;
-}
-::-webkit-scrollbar-track {
-  background: var(--color-canvas-blue);
-  border-left: 2px solid var(--color-ink-alabaster);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--color-ink-alabaster);
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-accent-vermilion);
-}
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-gunmetal-light); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-mist-dim); }
 
 *:focus-visible {
   outline: none;
-  box-shadow: inset 0 0 0 4px var(--color-accent-absinthe);
+  box-shadow: 0 0 0 2px var(--color-saffron);
 }
 
-/* Text stroke utility for hollow text effects */
-@utility text-stroke {
-  -webkit-text-stroke: 1px var(--color-ink-alabaster);
-  color: transparent;
+/* Perforated edge effect for tickets */
+@utility ticket-perf-left {
+  background-image: radial-gradient(circle, var(--color-void-mid) 4px, transparent 4px);
+  background-size: 1px 18px;
+  background-repeat: repeat-y;
+  background-position: left center;
+  padding-left: 20px;
 }
-@utility text-stroke-vermilion {
-  -webkit-text-stroke: 1px var(--color-accent-vermilion);
-  color: transparent;
+
+/* Soft ambient glow */
+@keyframes ambient-breathe {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+@keyframes ticker-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
 }

@@ -11,7 +11,7 @@ const newsreader = Newsreader({
 
 const workSans = Work_Sans({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["300", "400", "500", "600", "700", "800"],
   variable: "--font-work-sans",
 });
 
@@ -33,7 +33,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${newsreader.variable} ${workSans.variable} ${spaceMono.variable}`}>
-      <body className="bg-background text-ink font-sans antialiased">
+      <body className="bg-[#0C0D11] text-[#F4F0E8] font-sans antialiased">
         {children}
       </body>
     </html>
