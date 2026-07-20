@@ -1,4 +1,4 @@
-const SHORTCODE_MAP: Record<string, string> = {
+export const SHORTCODE_MAP: Record<string, string> = {
   ":smile:": "😄",
   ":laughing:": "😆",
   ":wink:": "😉",

@@ -29,7 +29,7 @@ export default function MessageThread({ messages, currentUserId, typingUser }: M
   }
 
   return (
-    <div style={{ flex: 1, overflowY: "auto", background: "#14110F", padding: "0 10vw", paddingTop: "80px", position: "relative", zIndex: 1 }}>
+    <div style={{ flex: 1, overflowY: "auto", background: "#14110F", padding: "0 10vw", paddingTop: "180px", position: "relative", zIndex: 1 }}>
       <div style={{ display: "flex", flexDirection: "column" }}>
         {messages.map((message, i) => (
           <MessageBubble
