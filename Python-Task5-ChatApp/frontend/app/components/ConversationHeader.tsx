@@ -18,7 +18,7 @@ export default function ConversationHeader({ roomName, activeUsers, connected }:
       left: 0,
       right: 0,
       background: "linear-gradient(to bottom, rgba(20, 17, 15, 1) 40%, rgba(20, 17, 15, 0))",
-      zIndex: 10,
+      zIndex: 50,
       pointerEvents: "none"
     }}>
       <div>
