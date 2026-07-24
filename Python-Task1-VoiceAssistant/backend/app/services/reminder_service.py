@@ -6,10 +6,7 @@ from app.models.reminder import Reminder
 
 
 class ReminderService:
-    """Schedules in-memory reminders using asyncio callbacks. Fired
-    reminders are pushed into a queue the frontend polls, since a voice
-    assistant needs to surface the reminder even if the user isn't
-    actively looking at the page when it fires."""
+    """Schedules in-memory reminders using asyncio callbacks and queues fired reminders for frontend polling."""
 
     def __init__(self):
         self._reminders: dict[str, Reminder] = {}
@@ -33,8 +30,7 @@ class ReminderService:
             self._fired_queue.append(reminder)
 
     def pop_fired(self) -> list[Reminder]:
-        """Returns and clears any reminders that have fired since the
-        last time this was called, letting the frontend poll for them."""
+        """Returns and clears all reminders that have fired since the last check."""
         fired = list(self._fired_queue)
         self._fired_queue.clear()
         return fired

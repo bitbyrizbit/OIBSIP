@@ -14,12 +14,12 @@ class WeatherAction:
             async with httpx.AsyncClient(timeout=8.0) as client:
                 response = await client.get(self.BASE_URL, params=params)
         except httpx.TimeoutException:
-            raise ActionExecutionError("weather", "the weather service took too long to respond")
+            raise ActionExecutionError("weather", "Weather service request timed out")
 
         if response.status_code == 404:
-            raise ActionExecutionError("weather", f"couldn't find a place called '{location}'")
+            raise ActionExecutionError("weather", f"Location '{location}' not found")
         if response.status_code != 200:
-            raise ActionExecutionError("weather", "the weather service is unavailable right now")
+            raise ActionExecutionError("weather", "Weather service is currently unavailable")
 
         raw = response.json()
         return WeatherSnapshot(

@@ -6,9 +6,8 @@ from app.config import settings
 from app.core.exceptions import IntentParsingError
 from app.models.intent import IntentType, ParsedIntent
 
-SYSTEM_PROMPT = """You are an intent classification engine for a voice assistant. \
-Given a user's spoken request, respond with ONLY a JSON object, no other text, \
-no markdown formatting, matching this exact shape:
+SYSTEM_PROMPT = """You are an intent classification engine for a voice assistant.
+Given a user's spoken request, respond with ONLY a JSON object matching this exact shape:
 
 {
   "intent_type": one of ["greeting", "time", "date", "weather", "web_search", "reminder", "email", "general_question", "unknown"],
@@ -21,8 +20,7 @@ no markdown formatting, matching this exact shape:
     - for other intents, parameters can be an empty object {}
 }
 
-Classify based on genuine intent, not just keyword matching. "What's it like outside in Mumbai" \
-is a weather intent even without the word "weather". Respond with valid JSON only."""
+Classify based on genuine intent, not just keyword matching. "What's it like outside in Mumbai" is a weather intent even without the word "weather". Respond with valid JSON only."""
 
 
 class IntentService:
@@ -43,9 +41,9 @@ class IntentService:
             raw = completion.choices[0].message.content
             parsed = json.loads(raw)
         except (json.JSONDecodeError, KeyError, IndexError) as e:
-            raise IntentParsingError(f"model returned malformed output: {e}")
+            raise IntentParsingError(f"Failed to parse model response: {e}")
         except Exception as e:
-            raise IntentParsingError(f"groq request failed: {e}")
+            raise IntentParsingError(f"Groq API request failed: {e}")
 
         try:
             return ParsedIntent(
@@ -55,4 +53,5 @@ class IntentService:
                 original_text=text,
             )
         except ValueError as e:
-            raise IntentParsingError(f"model returned invalid intent type: {e}")
+            raise IntentParsingError(f"Invalid intent type received: {e}")
+

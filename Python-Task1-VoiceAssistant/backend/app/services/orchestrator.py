@@ -82,14 +82,14 @@ class Orchestrator:
         )
 
     async def _handle_general_question(self, intent: ParsedIntent) -> AssistantResponse:
-        # Day 3 will wire this to a real Groq completion for genuine Q&A.
+        # TODO: Integrate LLM completion for general knowledge Q&A
         return AssistantResponse(
             intent=intent,
             spoken_response="Let me think about that one.",
         )
 
     async def _handle_email(self, intent: ParsedIntent) -> AssistantResponse:
-        # Day 3 will wire this to smtplib.
+        # TODO: Implement email integration via smtplib
         return AssistantResponse(
             intent=intent,
             spoken_response="Email sending isn't wired up quite yet.",
