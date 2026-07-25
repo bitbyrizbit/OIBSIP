@@ -1,49 +1,66 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #0A0E14;
-  --color-surface: #131922;
-  --color-surface-raised: #1A2230;
-  --color-text-primary: #E8EDF4;
-  --color-text-secondary: #7C8798;
-  --color-text-tertiary: #4A5568;
-  --color-accent-signal: #4FE3C1;
-  --color-accent-signal-dim: #3AB89C;
-  --color-accent-alert: #FF6B4A;
-  --color-accent-alert-dim: #D4553A;
-  --color-hairline: #232B38;
+  /* Warm near-black — like a radio dial at midnight, NOT generic #000 */
+  --color-void: #0D0A07;
+  --color-void-mid: #161210;
+  --color-void-surface: #1F1A15;
 
-  --font-display: var(--font-space-grotesk), sans-serif;
-  --font-sans: var(--font-inter), sans-serif;
-  --font-mono: var(--font-jetbrains-mono), monospace;
+  /* Vacuum tube amber — the glow of a warm filament. Nobody uses this in UI. */
+  --color-amber: #E8A94B;
+  --color-amber-dim: rgba(232, 169, 75, 0.5);
+  --color-amber-glow: rgba(232, 169, 75, 0.08);
+  --color-amber-active: rgba(232, 169, 75, 0.15);
 
-  --ease-signal: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Old oscilloscope green — the color of vintage signal displays */
+  --color-signal: #7EC8A8;
+  --color-signal-dim: rgba(126, 200, 168, 0.4);
+
+  /* Parchment text — warm, not white */
+  --color-parchment: #F0E8D5;
+  --color-parchment-dim: #A89880;
+  --color-parchment-ghost: rgba(240, 232, 213, 0.12);
+
+  /* Dividers */
+  --color-hairline: rgba(240, 232, 213, 0.06);
+  --color-hairline-warm: rgba(232, 169, 75, 0.15);
+
+  --font-display: var(--font-newsreader), Georgia, serif;
+  --font-sans: var(--font-dm-sans), system-ui, sans-serif;
+  --font-mono: var(--font-dm-mono), monospace;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 html {
   scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   min-height: 100vh;
+  background-color: #0D0A07;
+  color: #F0E8D5;
 }
 
 ::selection {
-  background-color: #4FE3C1;
-  color: #0A0E14;
+  background-color: #E8A94B;
+  color: #0D0A07;
 }
 
-::-webkit-scrollbar {
-  width: 6px;
+::-webkit-scrollbar { width: 2px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(240, 232, 213, 0.1); }
+
+*:focus-visible { outline: 1px solid #E8A94B; outline-offset: 2px; }
+
+@keyframes signal-breathe {
+  0%, 100% { opacity: 0.4; transform: scaleY(0.3); }
+  50% { opacity: 1; transform: scaleY(1); }
 }
-::-webkit-scrollbar-track {
-  background: #0A0E14;
-}
-::-webkit-scrollbar-thumb {
-  background: #232B38;
-  border-radius: 3px;
+
+@keyframes transmit-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
 }

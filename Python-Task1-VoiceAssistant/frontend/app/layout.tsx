@@ -1,23 +1,24 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
+import { Newsreader, DM_Sans, DM_Mono } from "next/font/google";
 import "./globals.css";
 
-const spaceGrotesk = Space_Grotesk({
+const newsreader = Newsreader({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-space-grotesk",
+  style: ["normal", "italic"],
+  weight: ["300", "400", "500"],
+  variable: "--font-newsreader",
 });
 
-const inter = Inter({
+const dmSans = DM_Sans({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-inter",
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-dm-sans",
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const dmMono = DM_Mono({
   subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-jetbrains-mono",
+  weight: ["300", "400", "500"],
+  variable: "--font-dm-mono",
 });
 
 export const metadata: Metadata = {
@@ -31,8 +32,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
-      <body className="bg-background text-text-primary font-sans antialiased">
+    <html lang="en" className={`${newsreader.variable} ${dmSans.variable} ${dmMono.variable}`}>
+      <body className="bg-[#0D0A07] text-[#F0E8D5] font-sans antialiased">
         {children}
       </body>
     </html>
