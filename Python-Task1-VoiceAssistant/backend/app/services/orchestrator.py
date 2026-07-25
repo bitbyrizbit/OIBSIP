@@ -5,12 +5,16 @@ from app.models.intent import AssistantResponse, IntentType, ParsedIntent
 from app.services.reminder_service import reminder_service
 from app.services.search_action import SearchAction
 from app.services.weather_action import WeatherAction
+from app.services.email_action import EmailAction
+from app.services.qa_service import QAService
 
 
 class Orchestrator:
     def __init__(self):
         self._weather_action = WeatherAction()
         self._search_action = SearchAction()
+        self._email_action = EmailAction()
+        self._qa_service = QAService()
 
     async def execute(self, intent: ParsedIntent) -> AssistantResponse:
         handler = self._handlers.get(intent.intent_type, self._handle_unknown)
@@ -82,18 +86,29 @@ class Orchestrator:
         )
 
     async def _handle_general_question(self, intent: ParsedIntent) -> AssistantResponse:
-        # TODO: Integrate LLM completion for general knowledge Q&A
-        return AssistantResponse(
-            intent=intent,
-            spoken_response="Let me think about that one.",
-        )
+        try:
+            answer = await self._qa_service.answer(intent.original_text)
+        except ActionExecutionError as e:
+            return AssistantResponse(intent=intent, spoken_response=str(e))
+        return AssistantResponse(intent=intent, spoken_response=answer)
 
     async def _handle_email(self, intent: ParsedIntent) -> AssistantResponse:
-        # TODO: Implement email integration via smtplib
-        return AssistantResponse(
-            intent=intent,
-            spoken_response="Email sending isn't wired up quite yet.",
-        )
+        recipient = intent.parameters.get("recipient")
+        subject = intent.parameters.get("subject", "Message from Relay")
+        body = intent.parameters.get("body")
+
+        if not recipient or not body:
+            return AssistantResponse(
+                intent=intent,
+                spoken_response="I need to know who to email and what to say.",
+            )
+
+        try:
+            self._email_action.send(recipient, subject, body)
+        except ActionExecutionError as e:
+            return AssistantResponse(intent=intent, spoken_response=str(e))
+
+        return AssistantResponse(intent=intent, spoken_response=f"Email sent to {recipient}.")
 
     async def _handle_unknown(self, intent: ParsedIntent) -> AssistantResponse:
         return AssistantResponse(
