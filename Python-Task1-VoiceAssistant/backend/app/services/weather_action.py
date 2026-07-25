@@ -9,13 +9,19 @@ class WeatherAction:
     BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
 
     async def get_weather(self, location: str) -> WeatherSnapshot:
-        params = {"q": location, "appid": settings.openweather_api_key}
+        params = {
+            "q": location,
+            "appid": settings.openweather_api_key,
+            "units": "metric",  # Always use metric so we never have to subtract 273.15
+        }
         try:
             async with httpx.AsyncClient(timeout=8.0) as client:
                 response = await client.get(self.BASE_URL, params=params)
         except httpx.TimeoutException:
             raise ActionExecutionError("weather", "Weather service request timed out")
 
+        if response.status_code == 401:
+            raise ActionExecutionError("weather", "Invalid OpenWeatherMap API key")
         if response.status_code == 404:
             raise ActionExecutionError("weather", f"Location '{location}' not found")
         if response.status_code != 200:
@@ -25,8 +31,10 @@ class WeatherAction:
         return WeatherSnapshot(
             location_name=raw.get("name", location),
             country=raw.get("sys", {}).get("country", ""),
-            temperature_celsius=round(raw["main"]["temp"] - 273.15, 1),
+            temperature_celsius=round(raw["main"]["temp"], 1),
+            feels_like_celsius=round(raw["main"]["feels_like"], 1),
             condition=raw["weather"][0]["main"],
             condition_description=raw["weather"][0]["description"],
             humidity=raw["main"]["humidity"],
+            wind_speed_mps=round(raw.get("wind", {}).get("speed", 0.0), 1),
         )

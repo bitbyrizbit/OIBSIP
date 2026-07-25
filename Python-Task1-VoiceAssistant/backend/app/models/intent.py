@@ -1,6 +1,6 @@
 from enum import Enum
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class IntentType(str, Enum):
@@ -12,6 +12,8 @@ class IntentType(str, Enum):
     REMINDER = "reminder"
     EMAIL = "email"
     GENERAL_QUESTION = "general_question"
+    CUSTOM_COMMAND = "custom_command"
+    STOP = "stop"
     UNKNOWN = "unknown"
 
 
@@ -29,4 +31,4 @@ class AssistantRequest(BaseModel):
 class AssistantResponse(BaseModel):
     intent: ParsedIntent
     spoken_response: str
-    data: dict = {}
+    data: dict = Field(default_factory=dict)
