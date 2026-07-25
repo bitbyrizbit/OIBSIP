@@ -1,33 +1,21 @@
 @import "tailwindcss";
 
 @theme {
-  /* Warm near-black — like a radio dial at midnight, NOT generic #000 */
-  --color-void: #0D0A07;
-  --color-void-mid: #161210;
-  --color-void-surface: #1F1A15;
+  --color-void: #000000;
+  --color-void-surface: rgba(255, 255, 255, 0.03);
+  --color-void-glass: rgba(255, 255, 255, 0.06);
 
-  /* Vacuum tube amber — the glow of a warm filament. Nobody uses this in UI. */
-  --color-amber: #E8A94B;
-  --color-amber-dim: rgba(232, 169, 75, 0.5);
-  --color-amber-glow: rgba(232, 169, 75, 0.08);
-  --color-amber-active: rgba(232, 169, 75, 0.15);
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: rgba(255, 255, 255, 0.6);
+  --color-text-tertiary: rgba(255, 255, 255, 0.4);
 
-  /* Old oscilloscope green — the color of vintage signal displays */
-  --color-signal: #7EC8A8;
-  --color-signal-dim: rgba(126, 200, 168, 0.4);
+  --color-accent-glow: #FFFFFF;
+  --color-accent-glow-dim: rgba(255, 255, 255, 0.1);
 
-  /* Parchment text — warm, not white */
-  --color-parchment: #F0E8D5;
-  --color-parchment-dim: #A89880;
-  --color-parchment-ghost: rgba(240, 232, 213, 0.12);
+  --color-hairline: rgba(255, 255, 255, 0.1);
 
-  /* Dividers */
-  --color-hairline: rgba(240, 232, 213, 0.06);
-  --color-hairline-warm: rgba(232, 169, 75, 0.15);
-
-  --font-display: var(--font-newsreader), Georgia, serif;
-  --font-sans: var(--font-dm-sans), system-ui, sans-serif;
-  --font-mono: var(--font-dm-mono), monospace;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-inter), monospace;
 }
 
 * { box-sizing: border-box; }
@@ -40,27 +28,28 @@ html {
 
 body {
   min-height: 100vh;
-  background-color: #0D0A07;
-  color: #F0E8D5;
+  background-color: #000000;
+  color: #FFFFFF;
 }
 
 ::selection {
-  background-color: #E8A94B;
-  color: #0D0A07;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
 }
 
-::-webkit-scrollbar { width: 2px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(240, 232, 213, 0.1); }
+::-webkit-scrollbar { display: none; }
 
-*:focus-visible { outline: 1px solid #E8A94B; outline-offset: 2px; }
+*:focus-visible { outline: 1px solid rgba(255, 255, 255, 0.2); outline-offset: 2px; }
 
-@keyframes signal-breathe {
-  0%, 100% { opacity: 0.4; transform: scaleY(0.3); }
-  50% { opacity: 1; transform: scaleY(1); }
+/* The Orb animations */
+@keyframes orb-breathe {
+  0%, 100% { transform: scale(1); filter: blur(60px); opacity: 0.6; }
+  50% { transform: scale(1.1); filter: blur(80px); opacity: 0.8; }
 }
 
-@keyframes transmit-pulse {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
+@keyframes orb-speak {
+  0% { transform: scale(1) rotate(0deg); filter: blur(50px); border-radius: 50%; opacity: 0.8; }
+  33% { transform: scale(1.2) rotate(120deg); filter: blur(60px); border-radius: 60% 40% 50% 70%; opacity: 1; }
+  66% { transform: scale(1.1) rotate(240deg); filter: blur(70px); border-radius: 40% 60% 70% 50%; opacity: 0.9; }
+  100% { transform: scale(1) rotate(360deg); filter: blur(50px); border-radius: 50%; opacity: 0.8; }
 }

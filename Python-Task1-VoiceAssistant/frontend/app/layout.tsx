@@ -1,29 +1,16 @@
 import type { Metadata } from "next";
-import { Newsreader, DM_Sans, DM_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-const newsreader = Newsreader({
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-  weight: ["300", "400", "500"],
-  variable: "--font-newsreader",
-});
-
-const dmSans = DM_Sans({
+const inter = Inter({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600"],
-  variable: "--font-dm-sans",
-});
-
-const dmMono = DM_Mono({
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-  variable: "--font-dm-mono",
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
-  title: "Relay",
-  description: "A voice assistant that actually understands what you mean.",
+  title: "AI Voice Interface",
+  description: "A spatial-computing inspired voice assistant.",
 };
 
 export default function RootLayout({
@@ -32,8 +19,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${newsreader.variable} ${dmSans.variable} ${dmMono.variable}`}>
-      <body className="bg-[#0D0A07] text-[#F0E8D5] font-sans antialiased">
+    <html lang="en" className={inter.variable}>
+      <body className="bg-black text-white font-sans antialiased selection:bg-white/20">
         {children}
       </body>
     </html>
